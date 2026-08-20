@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoManager - Gestão de Materiais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/materiais.css">
+</head>
+<body>
+
+  <!-- NAVBAR RESPONSIVA (Coding2GO) -->
+  <nav class="responsive-navbar">
+    <ul class="sidebar-overlay" id="mobileSidebar">
+      <li onclick="hideSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-xmark fa-lg"></i> Fechar</a>
+      </li>
+      <li><a href="index.html"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li><a href="materiais.html" class="active"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+    </ul>
+
+    <ul class="nav-list">
+      <li>
+        <a href="index.html" class="nav-brand">
+          <i class="fa-solid fa-recycle"></i> EcoManager
+        </a>
+      </li>
+      <li class="hide-on-mobile"><a href="index.html"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li class="hide-on-mobile"><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li class="hide-on-mobile"><a href="materiais.html" class="active"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+      <li class="menu-button" onclick="showSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-bars fa-lg"></i></a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Gestão de Materiais e Preços</h1>
+        <p class="subtitle">Cadastre os tipos de sucata e os valores de referência por quilo</p>
+      </div>
+      <div class="user-profile">
+        <span class="badge">Tabela de Preços</span>
+      </div>
+    </header>
+
+    <div class="grid-container">
+      
+      <!-- Formulário de Cadastro / Edição -->
+      <section class="card">
+        <div class="card-header">
+          <i class="fa-solid fa-cube"></i>
+          <h2 id="formTitulo">Cadastrar Novo Material</h2>
+        </div>
+        <form id="formMaterial" class="form-grid">
+          <input type="hidden" id="materialIdInterno">
+
+          <div class="form-group col-12">
+            <label for="codigoMaterial">Código do Material / Identificador</label>
+            <input type="text" id="codigoMaterial" placeholder="Ex: 000030-S ou 1575" required>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="nomeMaterial">Descrição do Material</label>
+            <input type="text" id="nomeMaterial" placeholder="Ex: PLACA MARROM - A" required>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="unidadeMaterial">Unidade de Medida</label>
+            <select id="unidadeMaterial" required>
+              <option value="KG">Quilograma (KG)</option>
+              <option value="UN">Unidade (UN)</option>
+            </select>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="precoMaterial">Preço Unitário (R$)</label>
+            <input type="text" id="precoMaterial" inputmode="numeric" placeholder="R$ 0,00" required>
+          </div>
+
+          <div class="form-group col-12 form-actions">
+            <button type="button" id="btnCancelarEdicao" class="btn btn-muted hidden">Cancelar</button>
+            <button type="submit" class="btn btn-secondary">
+              <i class="fa-solid fa-floppy-disk"></i> <span id="btnSalvarTexto">Salvar Material</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Lista de Materiais Cadastrados -->
+      <section class="card">
+        <div class="card-header space-between">
+          <div class="title-with-icon">
+            <i class="fa-solid fa-list-ul"></i>
+            <h2>Materiais e Preços</h2>
+          </div>
+          <div class="search-box">
+            <input type="text" id="buscaMaterial" placeholder="Filtrar por código ou nome...">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="tabelaMateriais">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th>Preço Base</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Inserido dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    function showSidebar() {
+      document.getElementById('mobileSidebar').style.display = 'flex';
+    }
+    function hideSidebar() {
+      document.getElementById('mobileSidebar').style.display = 'none';
+    }
+  </script>
+  <script src="../js/materiais.js"></script>
+</body>
+</html>

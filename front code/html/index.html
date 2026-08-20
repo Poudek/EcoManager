@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoManager - Emissor de Demonstrativos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+
+  <!-- NAVBAR RESPONSIVA -->
+  <nav class="responsive-navbar">
+    <ul class="sidebar-overlay" id="mobileSidebar">
+      <li onclick="hideSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-xmark fa-lg"></i> Fechar</a>
+      </li>
+      <li><a href="index.html" class="active"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+    </ul>
+
+    <ul class="nav-list">
+      <li>
+        <a href="index.html" class="nav-brand">
+          <i class="fa-solid fa-recycle"></i> EcoManager
+        </a>
+      </li>
+      <li class="hide-on-mobile"><a href="index.html" class="active"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li class="hide-on-mobile"><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li class="hide-on-mobile"><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+      <li class="menu-button" onclick="showSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-bars fa-lg"></i></a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Novo Demonstrativo de Pesagem</h1>
+        <p class="subtitle">Emissão sem valor fiscal para controle interno</p>
+      </div>
+      <div class="user-profile">
+        <span class="badge">Unidade Fortaleza</span>
+      </div>
+    </header>
+
+    <div class="grid-container">
+      
+      <!-- Card: Dados do Fornecedor -->
+      <section class="card">
+        <div class="card-header">
+          <i class="fa-solid fa-user-tag"></i>
+          <h2>1. Dados do Fornecedor</h2>
+        </div>
+        <div class="form-grid">
+          <div class="form-group col-12">
+            <label>Selecionar Fornecedor Cadastrado</label>
+            
+            <div class="custom-select-wrapper" id="wrapperFornecedor">
+              <input type="hidden" id="selectFornecedor" value="">
+              <div class="custom-select-trigger">
+                <span class="placeholder">Selecione pelo Código / Nome...</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+              </div>
+              <div class="custom-options" id="containerFornecedor">
+                <div class="custom-select-search">
+                  <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                  <input type="text" id="inputBuscaFornecedor" placeholder="Buscar por código ou nome..." autocomplete="off">
+                </div>
+                <div class="options-list" id="optionsFornecedor"></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group col-6">
+            <label>CPF / CNPJ</label>
+            <input type="text" id="fornecedorDoc" readonly placeholder="---">
+          </div>
+          <div class="form-group col-6">
+            <label>Telefone / WhatsApp</label>
+            <input type="text" id="fornecedorFone" readonly placeholder="---">
+          </div>
+          <div class="form-group col-12">
+            <label>Endereço</label>
+            <input type="text" id="fornecedorEndereco" readonly placeholder="---">
+          </div>
+        </div>
+      </section>
+
+      <!-- Card: Lançamento de Itens -->
+      <section class="card">
+        <div class="card-header">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <h2>2. Lançamento da Balança</h2>
+        </div>
+        <form id="formAdicionarItem" class="form-grid">
+          <div class="form-group col-12">
+            <label>Material / Sucata</label>
+            
+            <div class="custom-select-wrapper" id="wrapperMaterial">
+              <input type="hidden" id="selectMaterial" value="">
+              <div class="custom-select-trigger">
+                <span class="placeholder">Selecione o material...</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+              </div>
+              <div class="custom-options" id="containerMaterial">
+                <div class="custom-select-search">
+                  <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                  <input type="text" id="inputBuscaMaterial" placeholder="Buscar por código ou descrição..." autocomplete="off">
+                </div>
+                <div class="options-list" id="optionsMaterial"></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group col-4">
+            <label for="precoKg">Preço (R$/kg)</label>
+            <input type="number" id="precoKg" step="0.01" readonly required>
+          </div>
+          <div class="form-group col-4">
+            <label for="pesoBruto">Peso Líquido (kg)</label>
+            <input type="text" id="pesoBruto" inputmode="numeric" placeholder="0,000" required>
+          </div>
+          <div class="form-group col-4">
+            <label for="subtotalPrevisto">Subtotal (R$)</label>
+            <input type="text" id="subtotalPrevisto" readonly placeholder="R$ 0,00">
+          </div>
+          <div class="form-group col-12">
+            <button type="submit" class="btn btn-secondary">
+              <i class="fa-solid fa-plus"></i> Adicionar Item à Lista
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Card: Resumo e Tabela de Itens -->
+      <section class="card col-full">
+        <div class="card-header space-between">
+          <div class="title-with-icon">
+            <i class="fa-solid fa-list-check"></i>
+            <h2>Resumo da Pesagem</h2>
+          </div>
+          <div class="kpis">
+            <div class="kpi-item">
+              <span class="kpi-label">Peso Total:</span>
+              <span id="kpiPeso" class="kpi-value">0,000 kg</span>
+            </div>
+            <div class="kpi-item warning" id="kpiDescontoWrapper" style="display: none;">
+              <span class="kpi-label">Descontos:</span>
+              <span id="kpiDesconto" class="kpi-value">- R$ 0,00</span>
+            </div>
+            <div class="kpi-item highlight">
+              <span class="kpi-label">Valor Final:</span>
+              <span id="kpiValor" class="kpi-value">R$ 0,00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="tabelaItens">
+            <thead>
+              <tr>
+                <th>Código / Descrição</th>
+                <th>UN</th>
+                <th>Peso Líquido (kg)</th>
+                <th>Preço Unit. (R$)</th>
+                <th>Total (R$)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="linhaVazia">
+                <td colspan="6" class="text-center text-muted">Nenhum item adicionado à pesagem.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-toolbar">
+          <button type="button" id="btnAbrirModalDesconto" class="btn btn-outline">
+            <i class="fa-solid fa-tag"></i> Adicionar Desconto
+          </button>
+          <button type="button" id="btnLimparTudo" class="btn btn-outline btn-clear">
+            <i class="fa-solid fa-trash-can"></i> Limpar Tudo
+          </button>
+        </div>
+
+        <div id="secaoDescontos" class="descontos-container" style="display: none;">
+          <span class="descontos-title"><i class="fa-solid fa-scissors"></i> Descontos / Deduções Aplicadas:</span>
+          <div id="listaDescontos" class="descontos-chips"></div>
+        </div>
+
+        <div class="actions-footer">
+          <button id="btnPDF" class="btn btn-action btn-pdf">
+            <i class="fa-solid fa-file-pdf"></i> Gerar Demonstrativo (PDF)
+          </button>
+          <button id="btnWhatsapp" class="btn btn-action btn-whatsapp">
+            <i class="fa-brands fa-whatsapp"></i> Enviar WhatsApp
+          </button>
+          <button id="btnEmail" class="btn btn-action btn-email">
+            <i class="fa-solid fa-envelope"></i> Enviar por E-mail
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal de Desconto (Posicionado fora do <main> para cobrir 100% da tela) -->
+  <div id="modalDesconto" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-percent"></i> Aplicar Desconto / Dedução</h3>
+        <button type="button" id="btnFecharModal" class="btn-close">&times;</button>
+      </div>
+      <form id="formModalDesconto" class="form-grid">
+        <div class="form-group col-12">
+          <label for="descMotivo">Motivo / Descrição</label>
+          <input type="text" id="descMotivo" placeholder="Ex: Desconto embalagem, impureza, adiantamento" required>
+        </div>
+        <div class="form-group col-12">
+          <label for="descValor">Valor do Desconto (R$)</label>
+          <input type="text" id="descValor" inputmode="numeric" placeholder="R$ 0,00" required>
+        </div>
+        <div class="col-12 modal-actions">
+          <button type="button" id="btnCancelarModal" class="btn btn-muted">Cancelar</button>
+          <button type="submit" class="btn btn-secondary">Aplicar Desconto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showSidebar() {
+      document.getElementById('mobileSidebar').style.display = 'flex';
+    }
+    function hideSidebar() {
+      document.getElementById('mobileSidebar').style.display = 'none';
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

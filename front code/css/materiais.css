@@ -1,0 +1,91 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 1.25rem;
+}
+
+.search-box {
+  width: 100%;
+}
+
+.search-box input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+.code-badge, .code-badge-mat {
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  display: inline-block;
+  border: 1px solid var(--border);
+}
+
+.title-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.price-tag {
+  color: var(--primary-hover);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.45rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.btn-icon.edit { color: #2563eb; }
+.btn-icon.edit:hover { background: #dbeafe; }
+
+.btn-icon.btn-remove { color: var(--danger); }
+.btn-icon.btn-remove:hover { background: #fee2e2; }
+
+.btn-muted {
+  background: #e2e8f0;
+  color: var(--text-muted);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Ajustes Específicos para Mobile */
+@media (max-width: 900px) {
+  .grid-container { 
+    grid-template-columns: 1fr; 
+  }
+}
+
+@media (max-width: 600px) {
+  .card-header.space-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}

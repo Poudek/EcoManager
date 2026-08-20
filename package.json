@@ -1,0 +1,11 @@
+{
+  "name": "ecomanager",
+  "version": "1.0.0",
+  "description": "Sistema de emissão e gestão de demonstrativos de pesagem",
+  "scripts": {
+    "test": "jest --colors"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

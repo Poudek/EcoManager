@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>EcoManager - Testes no Navegador</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.css">
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f8fafc; }
+    #mocha-stats { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Suíte de Testes - EcoManager</h1>
+  <div id="mocha"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.10/chai.min.js"></script>
+
+  <!-- Script das funções lógicas -->
+  <script src="src/calculos.js"></script>
+
+  <script>
+    mocha.setup('bdd');
+    const expect = chai.expect;
+
+    describe('Testes de Lógica no Navegador', () => {
+      it('Deve converter corretamente texto de peso para decimal', () => {
+        expect(parsePesoFormatado('12,411')).to.equal(12.411);
+      });
+
+      it('Deve abater os descontos do valor final', () => {
+        const itens = [{ peso: 5.0, total: 100.0 }];
+        const descontos = [{ motivo: 'TAXA', valor: 15.0 }];
+        const res = calcularResumoPesagem(itens, descontos);
+        expect(res.valorFinal).to.equal(85.0);
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+:root {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --bg-body: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --danger: #ef4444;
+  --radius: 10px;
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* =========================================
+   NAVBAR SUPERIOR & SIDEBAR RESPONSIVA (Coding2GO)
+   ========================================= */
+nav.responsive-navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+nav.responsive-navbar ul.nav-list {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 1.25rem;
+}
+
+nav.responsive-navbar li {
+  height: 56px;
+}
+
+nav.responsive-navbar li:first-child {
+  margin-right: auto;
+}
+
+nav.responsive-navbar a {
+  height: 100%;
+  padding: 0 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #334155;
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav.responsive-navbar a:hover,
+nav.responsive-navbar a.active {
+  background-color: #f1f5f9;
+  color: var(--primary-hover);
+}
+
+.nav-brand {
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  color: var(--primary-hover) !important;
+  padding-left: 0 !important;
+}
+
+.menu-button {
+  display: none;
+  cursor: pointer;
+}
+
+.menu-button a {
+  font-size: 1.25rem;
+  padding: 0 8px;
+}
+
+/* Sidebar Retrátil Mobile (Glassmorphism) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 270px;
+  z-index: 999;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: -10px 0 25px rgba(0, 0, 0, 0.15);
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 1rem;
+  list-style: none;
+  animation: slideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.sidebar-overlay li {
+  width: 100%;
+  height: 52px;
+}
+
+.sidebar-overlay a {
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #1e293b;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.sidebar-overlay a:hover,
+.sidebar-overlay a.active {
+  background-color: #ecfdf5;
+  color: var(--primary-hover);
+}
+
+/* =========================================
+   LAYOUT GERAL E CONTAINER
+   ========================================= */
+.main-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+  animation: pageEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.topbar h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.badge {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.card-header.space-between {
+  justify-content: space-between;
+}
+
+.card-header i {
+  color: var(--primary);
+}
+
+.card-header h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Formulários */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.85rem;
+}
+
+.col-12 { grid-column: span 12; }
+.col-6 { grid-column: span 6; }
+.col-4 { grid-column: span 4; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+input, select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  outline: none;
+  background-color: var(--surface);
+  transition: border-color 0.2s;
+  min-height: 42px; /* Área de toque confortável no mobile */
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  min-height: 42px;
+  transition: background 0.2s;
+}
+
+.btn-secondary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-hover);
+}
+
+.table-responsive {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 520px; /* Garante que a tabela não se deforme em telas pequenas */
+}
+
+.data-table th, .data-table td {
+  padding: 0.75rem 0.85rem;
+  font-size: 0.85rem;
+}
+
+.data-table th {
+  background: #f8fafc;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  border-bottom: 1px solid var(--border);
+}
+
+.text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
+
+/* =========================================
+   MEDIA QUERIES - RESPONSIVIDADE PARA CELULARES
+   ========================================= */
+@media (max-width: 800px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .menu-button {
+    display: block !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 1rem 0.85rem;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .topbar h1 {
+    font-size: 1.2rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  /* No celular, colunas médias e pequenas viram 100% */
+  .col-6, .col-4 {
+    grid-column: span 12;
+  }
+
+  .form-grid {
+    gap: 0.75rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-overlay {
+    width: 100%; /* Ocupa tela cheia em celulares menores */
+  }
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
