@@ -76,18 +76,36 @@ docInput.addEventListener('input', (e) => {
 });
 
 // Máscara Celular
+celularInput.addEventListener('keydown', (e) => {
+  // Se apertar Backspace logo após um hífen, parêntese ou espaço, apaga o número anterior
+  if (e.key === 'Backspace') {
+    const input = e.target;
+    const pos = input.selectionStart;
+    const val = input.value;
+    if (pos > 0 && /[\s\-\)\(]/.test(val[pos - 1])) {
+      e.preventDefault();
+      const novoVal = val.slice(0, pos - 2) + val.slice(pos);
+      input.value = novoVal;
+      input.dispatchEvent(new Event('input'));
+    }
+  }
+});
+
 celularInput.addEventListener('input', (e) => {
   let v = e.target.value.replace(/\D/g, '');
   v = v.substring(0, 11);
+
   if (v.length > 10) {
     v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-  } else if (v.length > 5) {
-    v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+  } else if (v.length > 6) {
+    // Só adiciona o traço se já houver pelo menos 1 número após ele
+    v = v.replace(/^(\d{2})(\d{4})(\d{1,4})$/, '($1) $2-$3');
   } else if (v.length > 2) {
-    v = v.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+    v = v.replace(/^(\d{2})(\d{1,4})$/, '($1) $2');
   } else if (v.length > 0) {
-    v = v.replace(/^(\d*)/, '($1');
+    v = `(${v}`;
   }
+
   e.target.value = v;
 });
 
