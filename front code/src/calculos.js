@@ -1,3 +1,7 @@
+/**
+ * Utilitários de parsing e regras de negócio para pesagem e demonstrativos.
+ */
+
 function parsePesoFormatado(valorTexto) {
   if (!valorTexto) return 0;
   const apenasDigitos = String(valorTexto).replace(/\D/g, '');
@@ -30,7 +34,7 @@ function calcularResumoPesagem(itens = [], descontos = []) {
   };
 }
 
-// Suporte para Node/Jest e para Navegador
+// Compatibilidade Node.js / Jest e Navegador
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     parsePesoFormatado,
