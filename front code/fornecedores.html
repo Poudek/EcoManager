@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoManager - Gestão de Fornecedores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/fornecedores.css">
+</head>
+<body>
+
+  <!-- NAVBAR RESPONSIVA (Coding2GO) -->
+  <nav class="responsive-navbar">
+    <ul class="sidebar-overlay" id="mobileSidebar">
+      <li onclick="hideSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-xmark fa-lg"></i> Fechar</a>
+      </li>
+      <li><a href="index.html"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li><a href="fornecedores.html" class="active"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+    </ul>
+
+    <ul class="nav-list">
+      <li>
+        <a href="index.html" class="nav-brand">
+          <i class="fa-solid fa-recycle"></i> EcoManager
+        </a>
+      </li>
+      <li class="hide-on-mobile"><a href="index.html"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li class="hide-on-mobile"><a href="fornecedores.html" class="active"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li class="hide-on-mobile"><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+      <li class="menu-button" onclick="showSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-bars fa-lg"></i></a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Gestão de Fornecedores</h1>
+        <p class="subtitle">Cadastre e gerencie os fornecedores vinculados aos demonstrativos</p>
+      </div>
+      <div class="user-profile">
+        <span class="badge">Unidade Fortaleza</span>
+      </div>
+    </header>
+
+    <div class="grid-container">
+      
+      <!-- Formulário de Cadastro / Edição -->
+      <section class="card">
+        <div class="card-header">
+          <i class="fa-solid fa-user-plus"></i>
+          <h2 id="formTitulo">Cadastrar Novo Fornecedor</h2>
+        </div>
+        <form id="formFornecedor" class="form-grid">
+          <input type="hidden" id="fornecedorId">
+
+          <div class="form-group col-12">
+            <label for="nomeFornecedor">Nome Completo / Razão Social</label>
+            <input type="text" id="nomeFornecedor" placeholder="Ex: JOÃO DA SILVA" required>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="docFornecedor">CPF ou CNPJ</label>
+            <input type="text" id="docFornecedor" placeholder="000.000.000-00" required>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="celularFornecedor">Celular / WhatsApp</label>
+            <input type="tel" id="celularFornecedor" placeholder="(85) 90000-0000" required>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="emailFornecedor">E-mail</label>
+            <input type="email" id="emailFornecedor" placeholder="exemplo@email.com" required>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="enderecoFornecedor">Endereço Completo (Opcional)</label>
+            <input type="text" id="enderecoFornecedor" placeholder="Rua, Número, Bairro, Cidade/UF">
+          </div>
+
+          <div class="form-group col-12 form-actions">
+            <button type="button" id="btnCancelarEdicao" class="btn btn-muted hidden">Cancelar</button>
+            <button type="submit" class="btn btn-secondary">
+              <i class="fa-solid fa-floppy-disk"></i> <span id="btnSalvarTexto">Salvar Fornecedor</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Lista / Tabela de Fornecedores Cadastrados -->
+      <section class="card">
+        <div class="card-header space-between">
+          <div class="title-with-icon">
+            <i class="fa-solid fa-address-book"></i>
+            <h2>Fornecedores Cadastrados</h2>
+          </div>
+          <div class="search-box">
+            <input type="text" id="buscaFornecedor" placeholder="Filtrar por código ou nome...">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="tabelaFornecedores">
+            <thead>
+              <tr>
+                <th>Cód. Único</th>
+                <th>Nome</th>
+                <th>Contato</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Inserido dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    function showSidebar() {
+      document.getElementById('mobileSidebar').style.display = 'flex';
+    }
+    function hideSidebar() {
+      document.getElementById('mobileSidebar').style.display = 'none';
+    }
+  </script>
+  <script src="js/fornecedores.js"></script>
+</body>
+</html>
