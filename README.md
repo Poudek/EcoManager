@@ -1,61 +1,49 @@
-# ♻️ EcoManager — Emissor e Gestor de Demonstrativos de Pesagem
+# ♻️ EcoManager - Sistema de Gestão e Emissão de Demonstrativos de Pesagem
 
-O **EcoManager** é uma aplicação web voltada para empresas de reciclagem e gestão de resíduos. O sistema permite cadastrar fornecedores, gerenciar tabelas de preços de materiais/sucatas e emitir demonstrativos de pesagem com cálculo dinâmico de subtotais, abatimento de deduções/descontos e exportação em PDF padronizado.
+Sistema web front-end desenvolvido para controle operacional e emissão de demonstrativos de pesagem em empresas de reciclagem e gestão de resíduos. A aplicação permite gerenciar fornecedores, materiais/sucatas, registrar pesagens com descontos operacionais (impureza, tara) e gerar comprovantes prontos para conferência ou impressão.
+
+🔗 **Acesse a aplicação online:** [EcoManager na Vercel](https://eco-manager-wine.vercel.app)
 
 ---
 
 ## 🚀 Funcionalidades
 
-- **Emissão de Demonstrativo:**
-  - Busca inteligente e autocompletar de fornecedores cadastrados.
-  - Seleção de materiais com preenchimento automático do valor por quilo ($R\$/kg$).
-  - Máscara de pesagem em tempo real (três casas decimais).
-  - Gestão de descontos/deduções (impureza, embalagens, adiantamentos) com recálculo automático do valor final.
-  - Botão de reset rápido para limpar o demonstrativo completo.
-- **Gestão de Fornecedores:**
-  - Cadastro, edição, exclusão e busca dinâmica com persistência em `localStorage`.
-- **Gestão de Materiais e Preços:**
-  - Cadastro de tipos de sucata, código de identificação, unidade de medida e preço unitário com máscara monetária.
-- **Exportação & Integrações:**
-  - Geração de demonstrativo estruturado em **PDF** via `jsPDF` e `AutoTable`.
-  - Disparo de resumo via WhatsApp e encaminhamento por e-mail.
-- **Testes Unitários:**
-  - Suíte de testes com **Jest** para regras de negócio (cálculos e conversões).
-  - Runner HTML visual para execução de testes diretamente no navegador via Mocha/Chai.
+- **Emissão de Demonstrativos:** Lançamento de pesagens com cálculo automático de peso bruto, tara, descontos por impureza (kg ou %) e valor total por item e geral.
+- **Gestão de Fornecedores:** Cadastro, edição, exclusão e consulta com busca dinâmica.
+- **Gestão de Materiais e Preços:** Cadastro e parametrização de valores por kg para diferentes tipos de sucatas/resíduos.
+- **Ações Rápidas de Formulário:** Botão para limpar campos e reiniciar demonstrativos sem recarregar a tela.
+- **Persistência Local:** Armazenamento contínuo de registros via `localStorage`.
+- **Suíte de Testes Automatizados:** Testes unitários cobrindo as regras de cálculo e lógica de negócio.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Front-end:** HTML5, CSS3 moderno (Design Responsivo, Flexbox e CSS Grid), JavaScript (ES6+).
-- **Bibliotecas:** 
-  - [jsPDF](https://github.com/parallax/jsPDF) + [jsPDF-AutoTable](https://github.com/simonbengtsson/jsPDF-AutoTable) (Geração de PDFs).
-  - [Font Awesome](https://fontawesome.com/) (Ícones de interface).
-- **Testes:**
-  - [Jest](https://jestjs.io/) (Ambiente Node.js).
-  - [Mocha](https://mochajs.org/) & [Chai](https://www.chaijs.com/) (Ambiente de navegador).
+- **HTML5** & **CSS3** (Layout responsivo com CSS Grid e Flexbox)
+- **JavaScript (ES6+)** (Manipulação de DOM, regras de negócio e persistência local)
+- **Jest** (Testes unitários automatizados)
+- **Vercel** (Deploy contínuo integrado ao GitHub)
+- **Font Awesome** & **Google Fonts (Inter)**
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 ```text
+EcoManager/
 ├── css/
-│   ├── global.css          # Estilos globais e transições
-│   ├── index.css           # Estilos do demonstrativo e modais
-│   ├── fornecedores.css    # Estilos da tela de fornecedores
-│   └── materiais.css       # Estilos da tela de materiais
+│   ├── global.css          # Estilos compartilhados, variáveis e layout base
+│   └── index.css           # Estilos específicos da tela principal/tabelas
 ├── js/
-│   ├── app.js              # Lógica do demonstrativo e geração de PDF
-│   ├── fornecedores.js     # CRUD e busca de fornecedores
-│   └── materiais.js        # CRUD e tabela de preços de materiais
+│   └── app.js              # Lógica de interface, eventos de DOM e localStorage
 ├── src/
-│   └── calculos.js         # Funções puras de cálculo e parsing
+│   └── calculos.js         # Módulo isolado de regras de negócio e cálculos
 ├── tests/
 │   └── calculos.test.js    # Testes unitários com Jest
-├── index.html              # Tela principal do demonstrativo
-├── fornecedores.html       # Tela de gestão de fornecedores
-├── materiais.html          # Tela de gestão de materiais
-├── test-runner.html        # Execução visual de testes no navegador
-├── package.json            # Scripts e dependências de desenvolvimento
+├── index.html              # Tela principal (Emissão de Demonstrativo)
+├── fornecedores.html       # Cadastro e gestão de fornecedores
+├── materiais.html          # Cadastro e tabela de preços de materiais
+├── test-runner.html        # Interface alternativa para visualização de testes
+├── favicon.png             # Ícone oficial da aplicação
+├── package.json            # Configurações do projeto e scripts de teste
 └── README.md               # Documentação do projeto
