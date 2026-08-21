@@ -791,6 +791,102 @@ function gerarPDFDemonstrativo() {
   doc.save(`Demonstrativo_${fornecedorSelecionado.codigo}_${Date.now()}.pdf`);
 }
 
+const STORAGE_KEY_LANCAMENTOS = 'ecoreciclagem_historico_lancamentos';
+
+const btnEnviar = document.getElementById('btnEnviar');
+
+// Função para salvar o lançamento no histórico de relatórios
+function salvarLancamentoHistorico() {
+  if (!fornecedorSelecionado) {
+    alert('Selecione um fornecedor antes de enviar o lançamento.');
+    return null;
+  }
+
+  if (itensPesagem.length === 0) {
+    alert('Adicione ao menos um material à pesagem antes de enviar.');
+    return null;
+  }
+
+  const dadosExistentes = localStorage.getItem(STORAGE_KEY_LANCAMENTOS);
+  const lancamentos = dadosExistentes ? JSON.parse(dadosExistentes) : [];
+
+  const totalPeso = itensPesagem.reduce((acc, item) => acc + item.peso, 0);
+  const totalBruto = itensPesagem.reduce((acc, item) => acc + item.total, 0);
+  const totalDesc = descontos.reduce((acc, d) => acc + d.valor, 0);
+  const valorLiquido = Math.max(0, totalBruto - totalDesc);
+
+  const novoLancamento = {
+    id: `LAN-${Date.now().toString().slice(-6)}`,
+    dataHora: new Date().toISOString(),
+    operacao: typeof operacaoAtual !== 'undefined' ? operacaoAtual : 'compra',
+    fornecedor: {
+      codigo: fornecedorSelecionado.codigo,
+      nome: fornecedorSelecionado.nome,
+      doc: fornecedorSelecionado.doc || '---',
+      fone: fornecedorSelecionado.celular || fornecedorSelecionado.fone || '---'
+    },
+    itens: JSON.parse(JSON.stringify(itensPesagem)),
+    descontos: JSON.parse(JSON.stringify(descontos)),
+    totalPeso: totalPeso,
+    totalBruto: totalBruto,
+    totalDescontos: totalDesc,
+    valorFinal: valorLiquido
+  };
+
+  lancamentos.unshift(novoLancamento);
+  localStorage.setItem(STORAGE_KEY_LANCAMENTOS, JSON.stringify(lancamentos));
+
+  return novoLancamento;
+}
+
+// Função auxiliar para resetar todo o demonstrativo após o envio com sucesso
+function limparAposEnvio() {
+  itensPesagem = [];
+  descontos = [];
+  fornecedorSelecionado = null;
+
+  selectFornecedor.value = '';
+  const spanFornecedor = wrapperFornecedor.querySelector('.custom-select-trigger span');
+  if (spanFornecedor) {
+    spanFornecedor.textContent = 'Selecione pelo Código / Nome...';
+    spanFornecedor.classList.add('placeholder');
+  }
+  fornecedorDoc.value = '';
+  fornecedorFone.value = '';
+  fornecedorEndereco.value = '';
+
+  selectMaterial.value = '';
+  const spanMaterial = wrapperMaterial.querySelector('.custom-select-trigger span');
+  if (spanMaterial) {
+    spanMaterial.textContent = 'Selecione o material...';
+    spanMaterial.classList.add('placeholder');
+  }
+  precoKgInput.value = '';
+  pesoBrutoInput.value = '';
+  
+  if (subtotalPrevisto) {
+    if ('value' in subtotalPrevisto) subtotalPrevisto.value = 'R$ 0,00';
+    subtotalPrevisto.textContent = 'R$ 0,00';
+  }
+
+  desativarModoVendaGrande(false);
+  precoOriginalMaterial = '';
+
+  renderizarTabela();
+}
+
+// Evento de clique do botão Enviar Lançamento
+if (btnEnviar) {
+  btnEnviar.addEventListener('click', () => {
+    const lancamentoSalvo = salvarLancamentoHistorico();
+
+    if (lancamentoSalvo) {
+      alert(`✅ Lançamento [${lancamentoSalvo.id}] enviado com sucesso para o Relatório do Dia!`);
+      limparAposEnvio();
+    }
+  });
+}
+
 document.getElementById('btnPDF').addEventListener('click', gerarPDFDemonstrativo);
 
 document.getElementById('btnWhatsapp').addEventListener('click', () => {

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoManager - Histórico de Lançamentos</title>
+  <link rel="icon" type="image/png" href="./favicon.png?v=999">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/relatorios.css">
+</head>
+<body>
+
+  <nav class="responsive-navbar">
+    <ul class="sidebar-overlay" id="mobileSidebar">
+      <li onclick="hideSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-xmark fa-lg"></i> Fechar</a>
+      </li>
+      <li><a href="index.html"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+      <li><a href="relatorios.html" class="active"><i class="fa-solid fa-chart-pie"></i> Relatórios</a></li>
+    </ul>
+
+    <ul class="nav-list">
+      <li>
+        <a href="index.html" class="nav-brand">
+          <i class="fa-solid fa-recycle"></i> EcoManager
+        </a>
+      </li>
+      <li class="hide-on-mobile"><a href="index.html"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
+      <li class="hide-on-mobile"><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
+      <li class="hide-on-mobile"><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+      <li class="hide-on-mobile"><a href="relatorios.html" class="active"><i class="fa-solid fa-chart-pie"></i> Relatórios</a></li>
+      <li class="menu-button" onclick="showSidebar()">
+        <a href="javascript:void(0)"><i class="fa-solid fa-bars fa-lg"></i></a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Relatório de Operações & Lançamentos</h1>
+        <p class="subtitle">Acompanhe as pesagens do dia, detalhes de compras e vendas por comprovante</p>
+      </div>
+      <div class="user-profile">
+        <span class="badge">Controle Diário</span>
+      </div>
+    </header>
+
+    <!-- Indicadores do Dia -->
+    <div class="kpi-grid">
+      <div class="card kpi-card">
+        <div class="kpi-icon icon-emerald">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Total Compras (Dia)</span>
+          <h3 id="kpiTotalCompras">R$ 0,00</h3>
+        </div>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="kpi-icon icon-blue">
+          <i class="fa-solid fa-arrow-up-right-dots"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Total Vendas (Dia)</span>
+          <h3 id="kpiTotalVendas">R$ 0,00</h3>
+        </div>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="kpi-icon icon-purple">
+          <i class="fa-solid fa-weight-hanging"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Peso Total Movimentado</span>
+          <h3 id="kpiPesoTotal">0,000 kg</h3>
+        </div>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="kpi-icon icon-amber">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Lançamentos Hoje</span>
+          <h3 id="kpiQtdLancamentos">0</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Lançamentos -->
+    <section class="card">
+      <div class="card-header space-between">
+        <div class="title-with-icon">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <h2>Lançamentos do Dia</h2>
+        </div>
+        <div class="search-box">
+          <input type="text" id="buscaLancamento" placeholder="Buscar por ID, Fornecedor ou Data...">
+        </div>
+      </div>
+
+      <div id="listaLancamentosContainer" class="lancamentos-accordion-list">
+        <!-- Gerado dinamicamente via JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de Edição de Item do Lançamento -->
+  <div id="modalEditarItem" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square"></i> Editar Item do Lançamento</h3>
+        <button type="button" class="btn-close-modal" id="btnFecharModalEdicao">&times;</button>
+      </div>
+      <form id="formEdicaoItemLancamento">
+        <input type="hidden" id="editLancamentoId">
+        <input type="hidden" id="editItemIndex">
+
+        <div class="form-group">
+          <label>Material</label>
+          <input type="text" id="editMaterialNome" class="form-control" readonly disabled>
+        </div>
+
+        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+          <div class="form-group">
+            <label for="editPeso">Peso (KG)</label>
+            <input type="text" id="editPeso" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="editPreco">Preço Aplicado (R$)</label>
+            <input type="text" id="editPreco" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btnCancelarEdicaoItem" class="btn btn-muted">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Alteração</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showSidebar() { document.getElementById('mobileSidebar').style.display = 'flex'; }
+    function hideSidebar() { document.getElementById('mobileSidebar').style.display = 'none'; }
+  </script>
+  <script src="js/relatorios.js"></script>
+</body>
+</html>

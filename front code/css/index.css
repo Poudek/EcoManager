@@ -68,14 +68,17 @@ input[readonly] {
   font-weight: 600;
 }
 
-.btn-pdf { background: #334155; color: white; }
-.btn-pdf:hover { background: #1e293b; }
+.btn-pdf { background: #dd0c0c; color: white; }
+.btn-pdf:hover { background: #b31515; }
 
 .btn-whatsapp { background: #25d366; color: white; }
 .btn-whatsapp:hover { background: #1ebd56; }
 
 .btn-email { background: #3b82f6; color: white; }
 .btn-email:hover { background: #2563eb; }
+
+.btn-enviar { background: #05db57; color: white; }
+.btn-enviar:hover { background: #0c9641; }
 
 .btn-remove {
   background: none;

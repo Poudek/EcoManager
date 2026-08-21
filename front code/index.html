@@ -19,7 +19,7 @@
     <ul class="sidebar-overlay" id="mobileSidebar">
       <li onclick="hideSidebar()">
         <a href="javascript:void(0)"><i class="fa-solid fa-xmark fa-lg"></i> Fechar</a>
-      </li>
+      </li>    
       <li><a href="index.html" class="active"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
       <li><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
       <li><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
@@ -34,6 +34,7 @@
       <li class="hide-on-mobile"><a href="index.html" class="active"><i class="fa-solid fa-file-invoice"></i> Demonstrativo</a></li>
       <li class="hide-on-mobile"><a href="fornecedores.html"><i class="fa-solid fa-users"></i> Fornecedores</a></li>
       <li class="hide-on-mobile"><a href="materiais.html"><i class="fa-solid fa-cubes"></i> Materiais</a></li>
+      <li class="hide-on-mobile"><a href="relatorios.html"><i class="fa-solid fa-file-alt"></i> Relatórios</a></li>
       <li class="menu-button" onclick="showSidebar()">
         <a href="javascript:void(0)"><i class="fa-solid fa-bars fa-lg"></i></a>
       </li>
@@ -216,6 +217,9 @@
         </div>
 
         <div class="actions-footer">
+          <button id="btnEnviar" class="btn btn-action btn-enviar">
+          <i class="fa-solid fa-paper-plane"></i> Enviar Lançamento
+          </button>
           <button id="btnPDF" class="btn btn-action btn-pdf">
             <i class="fa-solid fa-file-pdf"></i> Gerar Demonstrativo (PDF)
           </button>
