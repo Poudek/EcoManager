@@ -193,6 +193,9 @@ function carregarDashboard(filtro = '') {
         </div>
         <div class="lancamento-header-actions">
           <span class="lancamento-valor-final">R$ ${formatarMoeda(l.valorFinal)}</span>
+          <button type="button" class="btn-icon btn-remove" onclick="excluirLancamentoCompleto(event, '${l.id}')" title="Excluir Lançamento Completo">
+            <i class="fa-solid fa-trash"></i>
+          </button>
           <i class="fa-solid fa-chevron-down text-muted" id="icon-${l.id}"></i>
         </div>
       </div>
