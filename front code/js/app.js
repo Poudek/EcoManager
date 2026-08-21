@@ -97,10 +97,12 @@ function obterFornecedores() {
 
 function obterMateriais() {
   const dados = localStorage.getItem(STORAGE_KEY_MATERIAIS);
+  
   if (!dados) {
     localStorage.setItem(STORAGE_KEY_MATERIAIS, JSON.stringify(materiaisIniciais));
     return materiaisIniciais;
   }
+  
   return JSON.parse(dados);
 }
 

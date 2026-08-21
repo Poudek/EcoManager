@@ -2,7 +2,7 @@ const STORAGE_KEY_LANCAMENTOS = 'ecoreciclagem_historico_lancamentos';
 
 let periodoAtivo = 'diario'; // 'diario' | 'semanal' | 'mensal'
 
-// Elementos
+// Elementos da DOM
 const kpiTotalCompras = document.getElementById('kpiTotalCompras');
 const kpiTotalVendas = document.getElementById('kpiTotalVendas');
 const kpiPesoComprado = document.getElementById('kpiPesoComprado');
@@ -18,7 +18,7 @@ const containerLista = document.getElementById('listaLancamentosContainer');
 const buscaInput = document.getElementById('buscaLancamento');
 const tituloHistorico = document.getElementById('tituloHistorico');
 
-// Modal
+// Modal de Edição
 const modalEditar = document.getElementById('modalEditarItem');
 const btnFecharModal = document.getElementById('btnFecharModalEdicao');
 const btnCancelarModal = document.getElementById('btnCancelarEdicaoItem');
@@ -47,7 +47,6 @@ function formatarMoeda(v) {
   return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// Filtro de Data
 function pertenceAoPeriodo(isoString) {
   const data = new Date(isoString);
   const agora = new Date();
@@ -137,7 +136,6 @@ function carregarDashboard(filtro = '') {
   const lista = obterLancamentos();
   const termo = filtro.toLowerCase().trim();
 
-  // Filtra por período
   const lancamentosPeriodo = lista.filter(l => pertenceAoPeriodo(l.dataHora));
 
   let comprasTotal = 0;
@@ -157,7 +155,6 @@ function carregarDashboard(filtro = '') {
 
   const pesoTotal = pesoComprado + pesoVendido;
 
-  // Atualização dos Indicadores
   if (kpiTotalCompras) kpiTotalCompras.textContent = `R$ ${formatarMoeda(comprasTotal)}`;
   if (kpiTotalVendas) kpiTotalVendas.textContent = `R$ ${formatarMoeda(vendasTotal)}`;
   if (kpiPesoComprado) kpiPesoComprado.textContent = `${pesoComprado.toFixed(3).replace('.', ',')} kg`;
@@ -165,12 +162,10 @@ function carregarDashboard(filtro = '') {
   if (kpiPesoTotal) kpiPesoTotal.textContent = `${pesoTotal.toFixed(3).replace('.', ',')} kg`;
   if (kpiQtdLancamentos) kpiQtdLancamentos.textContent = lancamentosPeriodo.length;
 
-  // Renderiza Tabelas Consolidadas
   const { comprasMap, vendasMap } = processarConsolidado(lancamentosPeriodo);
   renderizarTabelaConsolidada(tabelaConsolidadoComprasBody, comprasMap, subtotalComprasBadge);
   renderizarTabelaConsolidada(tabelaConsolidadoVendasBody, vendasMap, subtotalVendasBadge);
 
-  // Filtragem e Renderização do Histórico Detalhado
   const filtrados = lancamentosPeriodo.filter(l => 
     l.id.toLowerCase().includes(termo) ||
     l.fornecedor.nome.toLowerCase().includes(termo) ||
@@ -196,21 +191,21 @@ function carregarDashboard(filtro = '') {
           <strong>${l.fornecedor.codigo} - ${l.fornecedor.nome}</strong>
           <small class="text-muted"><i class="fa-regular fa-clock"></i> ${formatarData(l.dataHora)}</small>
         </div>
-        <div style="display: flex; align-items: center; gap: 15px;">
-          <strong style="color: #065f46; font-size: 1.05rem;">R$ ${formatarMoeda(l.valorFinal)}</strong>
+        <div class="lancamento-header-actions">
+          <span class="lancamento-valor-final">R$ ${formatarMoeda(l.valorFinal)}</span>
           <i class="fa-solid fa-chevron-down text-muted" id="icon-${l.id}"></i>
         </div>
       </div>
 
       <div class="lancamento-corpo" id="corpo-${l.id}">
-        <table class="data-table" style="margin-bottom: 15px;">
+        <table class="data-table">
           <thead>
             <tr>
               <th>Material</th>
               <th>Peso Líquido</th>
               <th>Preço Aplicado</th>
               <th>Subtotal</th>
-              <th style="width: 80px; text-align: center;">Ações</th>
+              <th style="width: 100px; text-align: center;">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -220,20 +215,25 @@ function carregarDashboard(filtro = '') {
                 <td>${item.peso.toFixed(3).replace('.', ',')} ${item.unidade}</td>
                 <td>R$ ${formatarMoeda(item.precoUnitario)}</td>
                 <td><strong>R$ ${formatarMoeda(item.total)}</strong></td>
-                <td style="text-align: center;">
-                  <button type="button" class="btn-icon edit" onclick="abrirModalEdicao('${l.id}', ${idx})" title="Editar Item">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
+                <td>
+                  <div class="table-actions-cell">
+                    <button type="button" class="btn-icon edit" onclick="abrirModalEdicao('${l.id}', ${idx})" title="Editar Item">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button type="button" class="btn-icon btn-remove" onclick="excluirItemLancamento('${l.id}', ${idx})" title="Excluir Item">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             `).join('')}
           </tbody>
         </table>
         
-        <div style="display: flex; justify-content: flex-end; gap: 20px; font-size: 0.9rem; color: #64748b;">
+        <div class="lancamento-footer-totais">
           <span>Peso Total: <strong>${l.totalPeso.toFixed(3).replace('.', ',')} kg</strong></span>
           <span>Descontos: <strong>R$ ${formatarMoeda(l.totalDescontos)}</strong></span>
-          <span>Total Líquido: <strong style="color: #065f46;">R$ ${formatarMoeda(l.valorFinal)}</strong></span>
+          <span>Total Líquido: <strong class="lancamento-valor-final">R$ ${formatarMoeda(l.valorFinal)}</strong></span>
         </div>
       </div>
     `;
@@ -303,6 +303,44 @@ formEdicao.addEventListener('submit', (e) => {
   carregarDashboard(buscaInput.value);
 });
 
+// Funções de Exclusão
+window.excluirItemLancamento = function(lancamentoId, itemIndex) {
+  let lista = obterLancamentos();
+  const lanc = lista.find(l => l.id === lancamentoId);
+  if (!lanc) return;
+
+  if (lanc.itens.length <= 1) {
+    if (confirm('Este é o único item do lançamento. Excluir este item removerá o lançamento completo. Deseja continuar?')) {
+      lista = lista.filter(l => l.id !== lancamentoId);
+      salvarLancamentos(lista);
+      carregarDashboard(buscaInput ? buscaInput.value : '');
+    }
+    return;
+  }
+
+  if (confirm(`Deseja remover o item "${lanc.itens[itemIndex].nome}" deste lançamento?`)) {
+    lanc.itens.splice(itemIndex, 1);
+
+    lanc.totalPeso = lanc.itens.reduce((acc, i) => acc + i.peso, 0);
+    lanc.totalBruto = lanc.itens.reduce((acc, i) => acc + i.total, 0);
+    lanc.valorFinal = Math.max(0, lanc.totalBruto - lanc.totalDescontos);
+
+    salvarLancamentos(lista);
+    carregarDashboard(buscaInput ? buscaInput.value : '');
+  }
+};
+
+window.excluirLancamentoCompleto = function(event, lancamentoId) {
+  event.stopPropagation();
+  
+  if (confirm(`Tem certeza que deseja excluir o lançamento [${lancamentoId}] permanentemente?`)) {
+    let lista = obterLancamentos();
+    lista = lista.filter(l => l.id !== lancamentoId);
+    salvarLancamentos(lista);
+    carregarDashboard(buscaInput ? buscaInput.value : '');
+  }
+};
+
 function gerarPDFRelatorioPeriodo() {
   const jsPdfLib = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
   if (!jsPdfLib) {
@@ -335,7 +373,6 @@ function gerarPDFRelatorioPeriodo() {
   };
   const tituloRelatorio = titulosPeriodo[periodoAtivo] || 'RELATÓRIO CONSOLIDADO';
 
-  // Cálculos Gerais
   let comprasTotal = 0;
   let vendasTotal = 0;
   let pesoComprado = 0;
@@ -361,11 +398,9 @@ function gerarPDFRelatorioPeriodo() {
   const textoPrincipal = [15, 23, 42];
   const textoSuave = [100, 116, 139];
 
-  // Barra de Destaque Superior
   doc.setFillColor(...verdePrimario);
   doc.rect(0, 0, pageWidth, 5, 'F');
 
-  // Cabeçalho Institucional
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(...verdeEscuro);
@@ -377,7 +412,6 @@ function gerarPDFRelatorioPeriodo() {
   doc.text('EcoManager - Painel de Controle Analítico de Movimentações', 14, 19);
   doc.text(`Emissão: ${dataFormatada}`, 14, 23);
 
-  // Card com Título do Período
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
   doc.roundedRect(pageWidth - 85, 9, 71, 15, 2, 2, 'FD');
@@ -391,7 +425,6 @@ function gerarPDFRelatorioPeriodo() {
   doc.setFont('helvetica', 'normal');
   doc.text(`Lançamentos no período: ${lancamentosPeriodo.length}`, pageWidth - 82, 21);
 
-  // Card Resumo Geral (KPIs)
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
   doc.roundedRect(14, 28, pageWidth - 28, 16, 2, 2, 'FD');
@@ -412,7 +445,6 @@ function gerarPDFRelatorioPeriodo() {
 
   let posY = 48;
 
-  // 1. Tabela Consolidada de Compras
   const chavesCompras = Object.keys(comprasMap);
   if (chavesCompras.length > 0) {
     doc.setFont('helvetica', 'bold');
@@ -449,10 +481,8 @@ function gerarPDFRelatorioPeriodo() {
     posY = doc.lastAutoTable.finalY + 8;
   }
 
-  // 2. Tabela Consolidada de Vendas
   const chavesVendas = Object.keys(vendasMap);
   if (chavesVendas.length > 0) {
-    // Se a tabela for ficar muito baixa na página, cria uma nova página
     if (posY > 230) {
       doc.addPage();
       posY = 15;
@@ -493,7 +523,6 @@ function gerarPDFRelatorioPeriodo() {
   doc.save(`Relatorio_Consolidado_${periodoAtivo.toUpperCase()}_${Date.now()}.pdf`);
 }
 
-// Ouvinte do Botão de Exportar PDF
 const btnExportarPDF = document.getElementById('btnExportarPDFRelatorio');
 if (btnExportarPDF) {
   btnExportarPDF.addEventListener('click', gerarPDFRelatorioPeriodo);

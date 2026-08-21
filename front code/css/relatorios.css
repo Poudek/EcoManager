@@ -277,6 +277,63 @@
 .btn-icon.edit { color: #2563eb; }
 .btn-icon.edit:hover { background: #dbeafe; }
 
+/* Botões de Ação na Tabela e Acordeom */
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-icon:hover {
+  background-color: #f1f5f9;
+  transform: scale(1.05);
+}
+
+.btn-icon.edit {
+  color: #3b82f6;
+}
+
+.btn-icon.btn-remove {
+  color: #ef4444;
+}
+
+.btn-icon.btn-remove:hover {
+  background-color: #fee2e2;
+}
+
+.table-actions-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.lancamento-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lancamento-valor-final {
+  color: #065f46;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.lancamento-footer-totais {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 10px;
+}
+
 .title-with-icon {
   display: flex;
   align-items: center;
