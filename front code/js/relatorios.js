@@ -29,6 +29,27 @@ const editMaterialNome = document.getElementById('editMaterialNome');
 const editPeso = document.getElementById('editPeso');
 const editPreco = document.getElementById('editPreco');
 
+function carregarImagemBase64(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      resolve({
+        dataUrl: canvas.toDataURL('image/png'),
+        width: img.naturalWidth,
+        height: img.naturalHeight
+      });
+    };
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
 function obterLancamentos() {
   const dados = localStorage.getItem(STORAGE_KEY_LANCAMENTOS);
   return dados ? JSON.parse(dados) : [];
@@ -306,7 +327,6 @@ formEdicao.addEventListener('submit', (e) => {
   carregarDashboard(buscaInput.value);
 });
 
-// Funções de Exclusão
 window.excluirItemLancamento = function(lancamentoId, itemIndex) {
   let lista = obterLancamentos();
   const lanc = lista.find(l => l.id === lancamentoId);
@@ -344,7 +364,7 @@ window.excluirLancamentoCompleto = function(event, lancamentoId) {
   }
 };
 
-function gerarPDFRelatorioPeriodo() {
+async function gerarPDFRelatorioPeriodo() {
   const jsPdfLib = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
   if (!jsPdfLib) {
     alert('Biblioteca jsPDF não carregada.');
@@ -404,20 +424,31 @@ function gerarPDFRelatorioPeriodo() {
   doc.setFillColor(...verdePrimario);
   doc.rect(0, 0, pageWidth, 5, 'F');
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(...verdeEscuro);
-  doc.text('BRASIL SUSTENTABILIDADE & GESTÃO DE RESÍDUOS', 14, 14);
+  // Carrega e renderiza a Logo no Cabeçalho
+  const logoInfo = await carregarImagemBase64('../front%20code/assets/logo.png');
+  let textStartX = 14;
 
-  doc.setFontSize(8);
+  if (logoInfo) {
+    const logoHeight = 14;
+    const logoWidth = (logoInfo.width / logoInfo.height) * logoHeight;
+    doc.addImage(logoInfo.dataUrl, 'PNG', 14, 10, logoWidth, logoHeight);
+    textStartX = 14 + logoWidth + 6;
+  }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10.5);
+  doc.setTextColor(...verdeEscuro);
+  doc.text('DV RECICLAGEM', textStartX, 15);
+
+  doc.setFontSize(7.5);
   doc.setTextColor(...textoSuave);
   doc.setFont('helvetica', 'normal');
-  doc.text('EcoManager - Painel de Controle Analítico de Movimentações', 14, 19);
-  doc.text(`Emissão: ${dataFormatada}`, 14, 23);
+  doc.text('EcoManager - Painel de Controle Analítico', textStartX, 19.5);
+  doc.text(`Emissão: ${dataFormatada}`, textStartX, 23.5);
 
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
-  doc.roundedRect(pageWidth - 85, 9, 71, 15, 2, 2, 'FD');
+  doc.roundedRect(pageWidth - 85, 9, 71, 16, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
@@ -426,27 +457,27 @@ function gerarPDFRelatorioPeriodo() {
   doc.setFontSize(7);
   doc.setTextColor(...textoSuave);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Lançamentos no período: ${lancamentosPeriodo.length}`, pageWidth - 82, 21);
+  doc.text(`Lançamentos no período: ${lancamentosPeriodo.length}`, pageWidth - 82, 21.5);
 
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
-  doc.roundedRect(14, 28, pageWidth - 28, 16, 2, 2, 'FD');
+  doc.roundedRect(14, 30, pageWidth - 28, 16, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(...textoPrincipal);
-  doc.text(`Total Compras: R$ ${formatarMoeda(comprasTotal)}`, 18, 34);
-  doc.text(`Total Vendas: R$ ${formatarMoeda(vendasTotal)}`, 75, 34);
-  doc.text(`Resultado: R$ ${formatarMoeda(vendasTotal - comprasTotal)}`, 135, 34);
+  doc.text(`Total Compras: R$ ${formatarMoeda(comprasTotal)}`, 18, 36);
+  doc.text(`Total Vendas: R$ ${formatarMoeda(vendasTotal)}`, 75, 36);
+  doc.text(`Resultado: R$ ${formatarMoeda(vendasTotal - comprasTotal)}`, 135, 36);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(...textoSuave);
-  doc.text(`Peso Comprado: ${pesoComprado.toFixed(3).replace('.', ',')} kg`, 18, 40);
-  doc.text(`Peso Vendido: ${pesoVendido.toFixed(3).replace('.', ',')} kg`, 75, 40);
-  doc.text(`Peso Movimentado: ${(pesoComprado + pesoVendido).toFixed(3).replace('.', ',')} kg`, 135, 40);
+  doc.text(`Peso Comprado: ${pesoComprado.toFixed(3).replace('.', ',')} kg`, 18, 42);
+  doc.text(`Peso Vendido: ${pesoVendido.toFixed(3).replace('.', ',')} kg`, 75, 42);
+  doc.text(`Peso Movimentado: ${(pesoComprado + pesoVendido).toFixed(3).replace('.', ',')} kg`, 135, 42);
 
-  let posY = 48;
+  let posY = 50;
 
   const chavesCompras = Object.keys(comprasMap);
   if (chavesCompras.length > 0) {

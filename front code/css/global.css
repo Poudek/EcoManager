@@ -74,12 +74,30 @@ nav.responsive-navbar a.active {
   color: var(--primary-hover);
 }
 
+/* Logo na Navbar */
 .nav-brand {
-  font-weight: 700 !important;
-  font-size: 1.1rem !important;
-  color: var(--primary-hover) !important;
-  padding-left: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #1e293b;
 }
+
+.nav-logo {
+  height: 36px;
+  max-width: 140px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.nav-brand-text {
+  font-weight: 700;
+  color: #0f172a;
+}
+
 
 .menu-button {
   display: none;

@@ -1,5 +1,6 @@
 const STORAGE_KEY_FORNECEDORES = 'ecoreciclagem_fornecedores';
 const STORAGE_KEY_MATERIAIS = 'ecoreciclagem_materiais';
+const STORAGE_KEY_LANCAMENTOS = 'ecoreciclagem_historico_lancamentos';
 
 const fornecedoresIniciais = [
   {
@@ -46,7 +47,8 @@ let fornecedorSelecionado = null;
 // Variáveis de Controle
 let modoVendaGrandeAtivo = false;
 let precoOriginalMaterial = '';
-let ultimoItemAdicionadoIndex = null; // Controle da animação na tabela
+let ultimoItemAdicionadoIndex = null;
+let operacaoAtual = 'compra'; 
 
 // Elementos Fornecedor
 const wrapperFornecedor = document.getElementById('wrapperFornecedor');
@@ -67,6 +69,7 @@ const pesoBrutoInput = document.getElementById('pesoBruto');
 const subtotalPrevisto = document.getElementById('subtotalPrevisto');
 const formAdicionarItem = document.getElementById('formAdicionarItem');
 const btnVendaGrande = document.getElementById('btnVendaGrande');
+const btnToggleOperacao = document.getElementById('btnToggleOperacao');
 
 // Elementos Resumo
 const tabelaItensCorpo = document.querySelector('#tabelaItens tbody');
@@ -86,6 +89,31 @@ const formModalDesconto = document.getElementById('formModalDesconto');
 const descMotivo = document.getElementById('descMotivo');
 const descValor = document.getElementById('descValor');
 
+// Botões Ação
+const btnLimparTudo = document.getElementById('btnLimparTudo');
+const btnEnviar = document.getElementById('btnEnviar');
+
+function carregarImagemBase64(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      resolve({
+        dataUrl: canvas.toDataURL('image/png'),
+        width: img.naturalWidth,
+        height: img.naturalHeight
+      });
+    };
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
 function obterFornecedores() {
   const dados = localStorage.getItem(STORAGE_KEY_FORNECEDORES);
   if (!dados) {
@@ -97,12 +125,10 @@ function obterFornecedores() {
 
 function obterMateriais() {
   const dados = localStorage.getItem(STORAGE_KEY_MATERIAIS);
-  
   if (!dados) {
     localStorage.setItem(STORAGE_KEY_MATERIAIS, JSON.stringify(materiaisIniciais));
     return materiaisIniciais;
   }
-  
   return JSON.parse(dados);
 }
 
@@ -160,87 +186,6 @@ function renderizarOpcoesMateriais(termo = '') {
   }
 
   filtrados.forEach(m => {
-    const opt = document.createElement('div');
-    opt.className = 'custom-option';
-    opt.dataset.value = m.id;
-    // Exibe apenas Descrição e Valor
-    opt.textContent = `${m.nome} (R$ ${Number(m.precoKg).toFixed(2)}/${m.unidade || 'KG'})`;
-
-    opt.addEventListener('click', (e) => {
-      e.stopPropagation();
-      selectMaterial.value = m.id;
-      const spanTrigger = wrapperMaterial.querySelector('.custom-select-trigger span');
-      spanTrigger.textContent = m.nome;
-      spanTrigger.classList.remove('placeholder');
-      wrapperMaterial.classList.remove('open');
-
-      const precoNumerico = Number(m.precoKg) || 0;
-      precoOriginalMaterial = `R$ ${precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      precoKgInput.value = precoOriginalMaterial;
-
-      desativarModoVendaGrande(false);
-      calcularSubtotalPrevia();
-    });
-
-    optionsMaterial.appendChild(opt);
-  });
-}
-// Controle da Operação Atual ('compra' ou 'venda')
-let operacaoAtual = 'compra'; 
-
-const btnToggleOperacao = document.getElementById('btnToggleOperacao');
-
-// Alternância de Operação
-if (btnToggleOperacao) {
-  btnToggleOperacao.addEventListener('click', () => {
-    operacaoAtual = operacaoAtual === 'compra' ? 'venda' : 'compra';
-
-    if (operacaoAtual === 'compra') {
-      btnToggleOperacao.className = 'btn-operacao-toggle compra';
-      btnToggleOperacao.innerHTML = '<span class="badge-tag"><i class="fa-solid fa-cart-shopping"></i> COMPRA</span>';
-    } else {
-      btnToggleOperacao.className = 'btn-operacao-toggle venda';
-      btnToggleOperacao.innerHTML = '<span class="badge-tag"><i class="fa-solid fa-arrow-up-right-dots"></i> VENDA</span>';
-    }
-
-    // Se já houver um material selecionado, atualiza o preço na hora
-    if (selectMaterial && selectMaterial.value) {
-      const materiais = obterMateriais();
-      const mat = materiais.find(m => m.id === selectMaterial.value);
-      if (mat) {
-        const precoNumerico = operacaoAtual === 'compra' 
-          ? (Number(mat.precoKg) || 0)
-          : (Number(mat.precoVenda) || 0);
-
-        precoOriginalMaterial = `R$ ${precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        precoKgInput.value = precoOriginalMaterial;
-        desativarModoVendaGrande(false);
-        calcularSubtotalPrevia();
-      }
-    }
-
-    // Atualiza a lista visual do dropdown com os valores da nova operação
-    renderizarOpcoesMateriais(inputBuscaMaterial ? inputBuscaMaterial.value : '');
-  });
-}
-
-// Atualização da renderização do dropdown de materiais
-function renderizarOpcoesMateriais(termo = '') {
-  const materiais = obterMateriais();
-  optionsMaterial.innerHTML = '';
-
-  const termoNormalizado = termo.toLowerCase().trim();
-  const filtrados = materiais.filter(m => 
-    m.nome.toLowerCase().includes(termoNormalizado)
-  );
-
-  if (filtrados.length === 0) {
-    optionsMaterial.innerHTML = `<div class="custom-option-empty">Nenhum material encontrado.</div>`;
-    return;
-  }
-
-  filtrados.forEach(m => {
-    // Escolhe o valor base de acordo com a operação ativa
     const precoBase = operacaoAtual === 'compra'
       ? (Number(m.precoKg) || 0)
       : (Number(m.precoVenda) || 0);
@@ -270,6 +215,37 @@ function renderizarOpcoesMateriais(termo = '') {
     });
 
     optionsMaterial.appendChild(opt);
+  });
+}
+
+if (btnToggleOperacao) {
+  btnToggleOperacao.addEventListener('click', () => {
+    operacaoAtual = operacaoAtual === 'compra' ? 'venda' : 'compra';
+
+    if (operacaoAtual === 'compra') {
+      btnToggleOperacao.className = 'btn-operacao-toggle compra';
+      btnToggleOperacao.innerHTML = '<span class="badge-tag"><i class="fa-solid fa-cart-shopping"></i> COMPRA</span>';
+    } else {
+      btnToggleOperacao.className = 'btn-operacao-toggle venda';
+      btnToggleOperacao.innerHTML = '<span class="badge-tag"><i class="fa-solid fa-arrow-up-right-dots"></i> VENDA</span>';
+    }
+
+    if (selectMaterial && selectMaterial.value) {
+      const materiais = obterMateriais();
+      const mat = materiais.find(m => m.id === selectMaterial.value);
+      if (mat) {
+        const precoNumerico = operacaoAtual === 'compra' 
+          ? (Number(mat.precoKg) || 0)
+          : (Number(mat.precoVenda) || 0);
+
+        precoOriginalMaterial = `R$ ${precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        precoKgInput.value = precoOriginalMaterial;
+        desativarModoVendaGrande(false);
+        calcularSubtotalPrevia();
+      }
+    }
+
+    renderizarOpcoesMateriais(inputBuscaMaterial ? inputBuscaMaterial.value : '');
   });
 }
 
@@ -387,7 +363,6 @@ formAdicionarItem.addEventListener('submit', (e) => {
     return;
   }
 
-  // Define o índice da nova linha para receber a animação CSS
   ultimoItemAdicionadoIndex = itensPesagem.length;
 
   itensPesagem.push({
@@ -401,7 +376,6 @@ formAdicionarItem.addEventListener('submit', (e) => {
 
   renderizarTabela();
 
-  // Limpa o índice de animação após 800ms
   setTimeout(() => {
     ultimoItemAdicionadoIndex = null;
   }, 800);
@@ -440,7 +414,6 @@ function renderizarTabela() {
 
       const tr = document.createElement('tr');
       
-      // Adiciona classe de animação à linha recém-criada
       if (index === ultimoItemAdicionadoIndex) {
         tr.classList.add('linha-animada');
       }
@@ -492,8 +465,6 @@ window.removerItem = function(index) {
   itensPesagem.splice(index, 1);
   renderizarTabela();
 };
-
-const btnLimparTudo = document.getElementById('btnLimparTudo');
 
 if (btnLimparTudo) {
   btnLimparTudo.addEventListener('click', () => {
@@ -615,7 +586,7 @@ window.removerDesconto = function(index) {
   renderizarTabela();
 };
 
-function gerarPDFDemonstrativo() {
+async function gerarPDFDemonstrativo() {
   if (!fornecedorSelecionado || itensPesagem.length === 0) {
     alert('Selecione um fornecedor e adicione ao menos um material para gerar o PDF.');
     return;
@@ -652,16 +623,27 @@ function gerarPDFDemonstrativo() {
   doc.setFillColor(...verdePrimario);
   doc.rect(0, 0, pageWidth, 5, 'F');
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(...verdeEscuro);
-  doc.text('BRASIL SUSTENTABILIDADE & GESTÃO DE RESÍDUOS', 14, 14);
+  // Carrega e renderiza a Logo no Cabeçalho
+  const logoInfo = await carregarImagemBase64('assets/logo.png');
+  let textStartX = 14;
 
-  doc.setFontSize(8);
+  if (logoInfo) {
+    const logoHeight = 15;
+    const logoWidth = (logoInfo.width / logoInfo.height) * logoHeight;
+    doc.addImage(logoInfo.dataUrl, 'PNG', 14, 9, logoWidth, logoHeight);
+    textStartX = 14 + logoWidth + 6;
+  }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10.5);
+  doc.setTextColor(...verdeEscuro);
+  doc.text('DV RECICLAGEM', textStartX, 14);
+
+  doc.setFontSize(7.5);
   doc.setTextColor(...textoSuave);
   doc.setFont('helvetica', 'normal');
-  doc.text('CNPJ: 21.503.376/0016-75 | Fone: (11) 4732-4789', 14, 19);
-  doc.text('Endereço: Rua Antonio Martins, 102 - Damas - Fortaleza/CE', 14, 23);
+  doc.text('CNPJ: 21.503.376/0016-75 | Fone: (11) 4732-4789', textStartX, 18.5);
+  doc.text('Endereço: Rua Antonio Martins, 102 - Damas - Fortaleza/CE', textStartX, 22.5);
 
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
@@ -788,11 +770,6 @@ function gerarPDFDemonstrativo() {
   doc.save(`Demonstrativo_${fornecedorSelecionado.codigo}_${Date.now()}.pdf`);
 }
 
-const STORAGE_KEY_LANCAMENTOS = 'ecoreciclagem_historico_lancamentos';
-
-const btnEnviar = document.getElementById('btnEnviar');
-
-// Função para salvar o lançamento no histórico de relatórios
 function salvarLancamentoHistorico() {
   if (!fornecedorSelecionado) {
     alert('Selecione um fornecedor antes de enviar o lançamento.');
@@ -836,7 +813,6 @@ function salvarLancamentoHistorico() {
   return novoLancamento;
 }
 
-// Função auxiliar para resetar todo o demonstrativo após o envio com sucesso
 function limparAposEnvio() {
   itensPesagem = [];
   descontos = [];
@@ -872,7 +848,6 @@ function limparAposEnvio() {
   renderizarTabela();
 }
 
-// Evento de clique do botão Enviar Lançamento
 if (btnEnviar) {
   btnEnviar.addEventListener('click', () => {
     const lancamentoSalvo = salvarLancamentoHistorico();
