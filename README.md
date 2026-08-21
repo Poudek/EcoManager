@@ -1,49 +1,87 @@
-# ♻️ EcoManager - Sistema de Gestão e Emissão de Demonstrativos de Pesagem
+# ♻️ EcoManager - Sistema de Gestão e Pesagem de Reciclagem
 
-Sistema web front-end desenvolvido para controle operacional e emissão de demonstrativos de pesagem em empresas de reciclagem e gestão de resíduos. A aplicação permite gerenciar fornecedores, materiais/sucatas, registrar pesagens com descontos operacionais (impureza, tara) e gerar comprovantes prontos para conferência ou impressão.
+<p align="center">
+  <img src="assets/logo.png" alt="Logo DV Reciclagem" width="180" />
+</p>
 
-🔗 **Acesse a aplicação online:** [EcoManager na Vercel](https://eco-manager-wine.vercel.app)
+<p align="center">
+  <strong>Plataforma web ágil e intuitiva para controle operacional de pesagem, precificação dinâmica, livro-caixa diário e emissão de demonstrativos analíticos.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Em%20Produção-10B981?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel" alt="Deploy Vercel">
+  <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JS">
+  <img src="https://img.shields.io/badge/CSS3-Modern%20UI-1572B6?style=for-the-badge&logo=css3" alt="CSS">
+</p>
 
 ---
 
-## 🚀 Funcionalidades
+## 📌 Visão Geral
 
-- **Emissão de Demonstrativos:** Lançamento de pesagens com cálculo automático de peso bruto, tara, descontos por impureza (kg ou %) e valor total por item e geral.
-- **Gestão de Fornecedores:** Cadastro, edição, exclusão e consulta com busca dinâmica.
-- **Gestão de Materiais e Preços:** Cadastro e parametrização de valores por kg para diferentes tipos de sucatas/resíduos.
-- **Ações Rápidas de Formulário:** Botão para limpar campos e reiniciar demonstrativos sem recarregar a tela.
-- **Persistência Local:** Armazenamento contínuo de registros via `localStorage`.
-- **Suíte de Testes Automatizados:** Testes unitários cobrindo as regras de cálculo e lógica de negócio.
+O **EcoManager** foi desenvolvido para resolver gargalos operacionais em depósitos de reciclagem e gestão de sucata. O sistema substitui anotações manuais por um fluxo digital que calcula pesos líquidos, subtotais e deduções em tempo real, permitindo a emissão instantânea de demonstrativos em PDF e sincronização com relatórios periódicos de compras e vendas.
+
+---
+
+## ✨ Funcionalidades Principais
+
+### 1. ⚖️ Demonstrativo de Pesagem em Tempo Real (`index.html`)
+- **Alternância de Operação (Compra / Venda):** Alterne o fluxo operacional em um clique, com ajuste automático de tabelas de preços.
+- **Modo Venda Grande (Desbloqueio de Preço):** Permite renegociação de preços unitários sob demanda sem alterar o valor base do cadastro.
+- **Deduções e Descontos:** Modal para lançar descontos avulsos (impureza, embalagens, adiantamentos) com recálculo automático do valor líquido.
+- **Disparo Multiplataforma:**
+  - 📄 **PDF Institucional:** Geração com logo do cliente, dados cadastrais e layout contábil padronizado.
+  - 📲 **WhatsApp:** Montagem de mensagem pronta com link de envio direto para o número do fornecedor/cliente.
+  - 💾 **Lançamento Direto:** Envio do comprovante para o livro-caixa da aba de Relatórios.
+
+### 2. 📊 Relatórios & Inteligência Operacional (`relatorios.html`)
+- **Filtros por Período:** Visualização dinâmica **Diária (Hoje)**, **Semanal (7 Dias)** e **Mensal (Mês Atual)**.
+- **KPIs do Painel:** Total em R$ Comprado, Total em R$ Vendido, Peso Total Comprado, Peso Total Vendido, Peso Movimentado e Quantidade de Operações.
+- **Consolidação por Material:** Agrupamento automático de todos os quilos transacionados e gasto/faturamento total por tipo de produto.
+- **Livro-Caixa em Acordeom:** Histórico detalhado por ID do comprovante, com visualização sanfona de cada produto pesado.
+- **Edição & Exclusão Pontual:** Edição de peso/preço de itens passados e exclusão individual ou completa de lançamentos com recálculo de saldo.
+- **Exportação Consolidada em PDF:** Emissão de relatórios analíticos de período contendo resumo e tabelas segregadas de compras e vendas.
+
+### 3. 👥 Gestão de Fornecedores & Clientes (`fornecedores.html`)
+- Cadastro com busca rápida e máscaras automáticas (CPF/CNPJ, Telefone/WhatsApp e CEP).
+- Listagem com consulta instantânea e preenchimento automático nos lançamentos.
+
+### 4. 📦 Catálogo de Materiais (`materiais.html`)
+- Cadastro de materiais com separação entre Preço de Compra (KG) e Preço de Venda (KG).
+- Formulário lateral fixo (*sticky*) para cadastro ágil sem perder a visualização da tabela.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **HTML5** & **CSS3** (Layout responsivo com CSS Grid e Flexbox)
-- **JavaScript (ES6+)** (Manipulação de DOM, regras de negócio e persistência local)
-- **Jest** (Testes unitários automatizados)
-- **Vercel** (Deploy contínuo integrado ao GitHub)
-- **Font Awesome** & **Google Fonts (Inter)**
+- **HTML5 Semântico:** Estruturação limpa, acessível e responsiva.
+- **CSS3 Moderno:** Design System baseado no padrão Tailwind (Slate/Emerald/Blue), Flexbox, CSS Grid e tipografia Inter.
+- **JavaScript (Vanilla ES6+):** Manipulação de DOM, cálculos de alta precisão, máscaras e filtros sem dependência de frameworks pesados.
+- **jsPDF & jsPDF-AutoTable:** Renderização e diagramação dinâmica de documentos em PDF de alta qualidade vetorial.
+- **Font Awesome 6:** Biblioteca de ícones vetoriais.
+- **LocalStorage API:** Persistência de dados local segura e sem necessidade de infraestrutura de banco de dados para testes.
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📂 Estrutura de Arquivos
 
-```text
-EcoManager/
+```bash
+├── assets/
+│   └── logo.png              # Identidade visual da empresa
 ├── css/
-│   ├── global.css          # Estilos compartilhados, variáveis e layout base
-│   └── index.css           # Estilos específicos da tela principal/tabelas
+│   ├── global.css            # Variáveis, reset, navbar e componentes globais
+│   ├── demonstrativo.css     # Estilização da tela de pesagem
+│   ├── fornecedores.css      # Estilização da tela de fornecedores
+│   ├── materiais.css         # Estilização da tela de materiais
+│   └── relatorios.css        # Estilização dos dashboards e acordeons
 ├── js/
-│   └── app.js              # Lógica de interface, eventos de DOM e localStorage
-├── src/
-│   └── calculos.js         # Módulo isolado de regras de negócio e cálculos
-├── tests/
-│   └── calculos.test.js    # Testes unitários com Jest
-├── index.html              # Tela principal (Emissão de Demonstrativo)
-├── fornecedores.html       # Cadastro e gestão de fornecedores
-├── materiais.html          # Cadastro e tabela de preços de materiais
-├── test-runner.html        # Interface alternativa para visualização de testes
-├── favicon.png             # Ícone oficial da aplicação
-├── package.json            # Configurações do projeto e scripts de teste
-└── README.md               # Documentação do projeto
+│   ├── app.js                # Lógica de pesagem, demonstrativo e PDF
+│   ├── fornecedores.js       # CRUD e máscaras de fornecedores
+│   ├── materiais.js          # CRUD e precificação de materiais
+│   └── relatorios.js         # Lógica dos filtros, consolidação e edição de lançamentos
+├── favicon.png               # Ícone da aba do navegador
+├── index.html                # Tela de Pesagem / Demonstrativo
+├── fornecedores.html         # Tela de Fornecedores
+├── materiais.html            # Tela de Materiais
+├── relatorios.html           # Tela de Relatórios e Lançamentos
+└── README.md
