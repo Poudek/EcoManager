@@ -21,27 +21,22 @@ const fornecedoresIniciais = [
 ];
 
 const materiaisIniciais = [
-  { id: "PLACA MARROM - A", nome: "PLACA MARROM - A", unidade: "KG", precoKg: 30.00, precoVenda: null },
-  { id: "PLACA INTERMEDIARIA - C", nome: "PLACA INTERMEDIARIA - C", unidade: "KG", precoKg: 47.00, precoVenda: null },
-  { id: "PLACA PESADA - B", nome: "PLACA PESADA - B", unidade: "KG", precoKg: 27.00, precoVenda: null },
-  { id: "PLACA MAE D - (FERRO)", nome: "PLACA MAE D - (FERRO)", unidade: "KG", precoKg: 27.00, precoVenda: null },
-  { id: "PLACA INTERMEDIARIA - MODEM", nome: "PLACA INTERMEDIARIA - MODEM", unidade: "KG", precoKg: 26.00, precoVenda: null },
-  { id: "IMPUREZA", nome: "IMPUREZA", unidade: "KG", precoKg: 0.00, precoVenda: null },
-  { id: "HD", nome: "HD", unidade: "KG", precoKg: 17.00, precoVenda: null },
-  { id: "PLACA LEVE - B", nome: "PLACA LEVE - B", unidade: "KG", precoKg: 120.00, precoVenda: null },
-  { id: "PLACA LEVE - C", nome: "PLACA LEVE - C", unidade: "KG", precoKg: 120.00, precoVenda: null },
-  { id: "PLACA DE TELEFONIA - B", nome: "PLACA DE TELEFONIA - B", unidade: "KG", precoKg: 185.00, precoVenda: null },
-  { id: "PLACA MAE C", nome: "PLACA MAE C", unidade: "KG", precoKg: 50.00, precoVenda: null },
-  { id: "EMBALAGEM", nome: "EMBALAGEM", unidade: "KG", precoKg: 0.00, precoVenda: null },
-  { id: "PLACA INTERMEDIARIA - B", nome: "PLACA INTERMEDIARIA - B", unidade: "KG", precoKg: 55.00, precoVenda: null },
-  { id: "PLACA DE CELULAR", nome: "PLACA DE CELULAR", unidade: "KG", precoKg: 250.00, precoVenda: null },
-  { id: "PLACA DE NOTEBOOK B", nome: "PLACA DE NOTEBOOK B", unidade: "KG", precoKg: 165.00, precoVenda: null },
-  { id: "PLACA DE NOTEBOOK C", nome: "PLACA DE NOTEBOOK C", unidade: "KG", precoKg: 75.00, precoVenda: null },
-  { id: "PLACA INTERMEDIARIA - A", nome: "PLACA INTERMEDIARIA - A", unidade: "KG", precoKg: 63.00, precoVenda: null },
-  { id: "PLACA DE DRIVE", nome: "PLACA DE DRIVE", unidade: "KG", precoKg: 120.00, precoVenda: null },
-  { id: "PLACA DE TABLET", nome: "PLACA DE TABLET", unidade: "KG", precoKg: 85.00, precoVenda: null },
-  { id: "PROCESSADOR DE FIBRA COBRE - A", nome: "PROCESSADOR DE FIBRA COBRE - A", unidade: "KG", precoKg: 170.00, precoVenda: null },
-  { id: "MEMORIA - A", nome: "MEMORIA - A", unidade: "KG", precoKg: 450.00, precoVenda: null }
+  { id: "PET", nome: "PET", unidade: "KG", precoKg: 1.70, precoVenda: null },
+  { id: "PLASTICO", nome: "PLÁSTICO", unidade: "KG", precoKg: 1.00, precoVenda: null },
+  { id: "FILME LIMPO", nome: "FILME LIMPO", unidade: "KG", precoKg: 2.00, precoVenda: null },
+  { id: "CADEIRA", nome: "CADEIRA", unidade: "KG", precoKg: 2.00, precoVenda: null },
+  { id: "PVC", nome: "PVC", unidade: "KG", precoKg: 1.00, precoVenda: null },
+  { id: "LATA", nome: "LATA", unidade: "KG", precoKg: 10.00, precoVenda: null },
+  { id: "PERFIL", nome: "PERFIL", unidade: "KG", precoKg: 12.00, precoVenda: null },
+  { id: "PANELA", nome: "PANELA", unidade: "KG", precoKg: 11.00, precoVenda: null },
+  { id: "COBRE", nome: "COBRE", unidade: "KG", precoKg: 60.00, precoVenda: null },
+  { id: "METAL", nome: "METAL", unidade: "KG", precoKg: 30.00, precoVenda: null },
+  { id: "CONDENSADOR", nome: "CONDENSADOR", unidade: "KG", precoKg: 23.00, precoVenda: null },
+  { id: "FERRO", nome: "FERRO", unidade: "KG", precoKg: 0.60, precoVenda: null },
+  { id: "ANTIMONIO", nome: "ANTIMONIO", unidade: "KG", precoKg: 7.00, precoVenda: null },
+  { id: "ALUMINIO MISTO", nome: "ALUMINIO MISTO", unidade: "KG", precoKg: 7.00, precoVenda: null },
+  { id: "ALUMINIO DURO LIMPO", nome: "ALUMINIO DURO LIMPO", unidade: "KG", precoKg: 7.00, precoVenda: null },
+  { id: "ALUMINIO DURO SUJO", nome: "ALUMINIO DURO SUJO", unidade: "KG", precoKg: 3.00, precoVenda: null },
 ];
 
 let itensPesagem = [];
