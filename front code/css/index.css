@@ -178,6 +178,82 @@ input[readonly] {
   width: 100%;
 }
 
+/* Botão Venda Grande */
+.btn-venda-grande {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px dashed #cbd5e1;
+  background-color: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-venda-grande:hover {
+  border-color: #94a3b8;
+  color: #334155;
+}
+
+/* Estado Ativo (quando clicado) */
+.btn-venda-grande.ativo {
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #b45309;
+}
+
+/* Efeito no input quando editável */
+.input-preco-editavel {
+  background-color: #ffffff !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Container e Botão Switch Compra / Venda */
+.operacao-switch-container {
+  display: flex;
+  align-items: center;
+}
+
+.btn-operacao-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modo Compra (Padrão) */
+.btn-operacao-toggle.compra {
+  background-color: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.btn-operacao-toggle.compra:hover {
+  background-color: #d1fae5;
+}
+
+/* Modo Venda */
+.btn-operacao-toggle.venda {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.btn-operacao-toggle.venda:hover {
+  background-color: #dbeafe;
+}
+
 .options-list {
   max-height: 200px;
   overflow-y: auto;
@@ -290,6 +366,7 @@ input[readonly] {
   cursor: pointer;
   font-size: 1rem;
 }
+
 
 /* Modal de Desconto */
 .modal-backdrop {

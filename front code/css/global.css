@@ -368,3 +368,24 @@ input:focus, select:focus {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Animação de entrada da nova linha */
+@keyframes linhaEntrada {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+    background-color: #d1fae5; /* Verde esmeralda suave de destaque */
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+    background-color: #d1fae5;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.linha-animada {
+  animation: linhaEntrada 0.7s ease-out forwards;
+}

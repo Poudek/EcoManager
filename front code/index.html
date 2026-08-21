@@ -96,10 +96,20 @@
 
       <!-- Card: Lançamento de Itens -->
       <section class="card">
-        <div class="card-header">
-          <i class="fa-solid fa-scale-balanced"></i>
-          <h2>2. Lançamento da Balança</h2>
-        </div>
+        <!-- Card 2. Lançamento da Balança -->
+<div class="card-header space-between" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-scale-balanced text-primary" style="font-size: 1.2rem; color: #10b981;"></i>
+    <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0; color: #1e293b;">2. Lançamento da Balança</h2>
+  </div>
+
+  <!-- Switch de Operação Compra / Venda -->
+  <div class="operacao-switch-container">
+    <button type="button" id="btnToggleOperacao" class="btn-operacao-toggle compra">
+      <span class="badge-tag"><i class="fa-solid fa-cart-shopping"></i> COMPRA</span>
+    </button>
+  </div>
+</div>
         <form id="formAdicionarItem" class="form-grid">
           <div class="form-group col-12">
             <label>Material / Sucata</label>
@@ -122,8 +132,10 @@
           </div>
           <div class="form-group col-4">
             <label for="precoKg">Preço (R$/kg)</label>
-            <input type="number" id="precoKg" step="0.01" readonly required>
+            <!-- Deixe exatamente assim: com readonly e sem disabled -->
+            <input type="text" id="precoKg" placeholder="R$ 0,00" readonly>
           </div>
+
           <div class="form-group col-4">
             <label for="pesoBruto">Peso Líquido (kg)</label>
             <input type="text" id="pesoBruto" inputmode="numeric" placeholder="0,000" required>
@@ -132,6 +144,12 @@
             <label for="subtotalPrevisto">Subtotal (R$)</label>
             <input type="text" id="subtotalPrevisto" readonly placeholder="R$ 0,00">
           </div>
+          <!-- Botão Modo Venda Grande -->
+<div class="venda-grande-container" style="margin-top: 6px; margin-bottom: 12px;">
+  <button type="button" id="btnVendaGrande" class="btn-venda-grande">
+    <i class="fa-solid fa-lock"></i> Venda Grande
+  </button>
+</div>
           <div class="form-group col-12">
             <button type="submit" class="btn btn-secondary">
               <i class="fa-solid fa-plus"></i> Adicionar Item à Lista

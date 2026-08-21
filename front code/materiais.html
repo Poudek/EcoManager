@@ -54,7 +54,7 @@
     <div class="grid-container">
       
       <!-- Formulário de Cadastro / Edição -->
-      <section class="card">
+      <section class="card card-formulario-material">
         <div class="card-header">
           <i class="fa-solid fa-cube"></i>
           <h2 id="formTitulo">Cadastrar Novo Material</h2>
@@ -63,16 +63,17 @@
           <input type="hidden" id="materialIdInterno">
 
           <div class="form-group col-12">
-            <label for="codigoMaterial">Código do Material / Identificador</label>
-            <input type="text" id="codigoMaterial" placeholder="Ex: 000030-S ou 1575" required>
-          </div>
-
-          <div class="form-group col-12">
             <label for="nomeMaterial">Descrição do Material</label>
-            <input type="text" id="nomeMaterial" placeholder="Ex: PLACA MARROM - A" required>
+            <input 
+              type="text" 
+              id="nomeMaterial" 
+              placeholder="Ex: PLACA MARROM - A" 
+              required
+              style="text-transform: uppercase;"
+            >
           </div>
 
-          <div class="form-group col-6">
+          <div class="form-group col-4">
             <label for="unidadeMaterial">Unidade de Medida</label>
             <select id="unidadeMaterial" required>
               <option value="KG">Quilograma (KG)</option>
@@ -80,9 +81,14 @@
             </select>
           </div>
 
-          <div class="form-group col-6">
-            <label for="precoMaterial">Preço Unitário (R$)</label>
+          <div class="form-group col-4">
+            <label for="precoMaterial">Preço Compra (R$)</label>
             <input type="text" id="precoMaterial" inputmode="numeric" placeholder="R$ 0,00" required>
+          </div>
+
+          <div class="form-group col-4">
+            <label for="precoVendaMaterial">Preço Venda (R$) </label>
+            <input type="text" id="precoVendaMaterial" inputmode="numeric" placeholder="R$ 0,00">
           </div>
 
           <div class="form-group col-12 form-actions">
@@ -102,7 +108,7 @@
             <h2>Materiais e Preços</h2>
           </div>
           <div class="search-box">
-            <input type="text" id="buscaMaterial" placeholder="Filtrar por código ou nome...">
+            <input type="text" id="buscaMaterial" placeholder="Filtrar por nome...">
           </div>
         </div>
 
@@ -110,9 +116,9 @@
           <table class="data-table" id="tabelaMateriais">
             <thead>
               <tr>
-                <th>Código</th>
                 <th>Descrição</th>
-                <th>Preço Base</th>
+                <th>Preço Compra</th>
+                <th>Preço Venda</th>
                 <th>Ações</th>
               </tr>
             </thead>

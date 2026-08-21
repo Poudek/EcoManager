@@ -21,32 +21,37 @@ const fornecedoresIniciais = [
 ];
 
 const materiaisIniciais = [
-  { id: "000030-S", nome: "PLACA MARROM - A", unidade: "KG", precoKg: 30.00 },
-  { id: "1575-S", nome: "PLACA INTERMEDIARIA - C", unidade: "KG", precoKg: 47.00 },
-  { id: "000028-S", nome: "PLACA PESADA - B", unidade: "KG", precoKg: 27.00 },
-  { id: "1568-S", nome: "PLACA MAE D - (FERRO)", unidade: "KG", precoKg: 27.00 },
-  { id: "2000-S", nome: "PLACA INTERMEDIARIA - MODEM", unidade: "KG", precoKg: 26.00 },
-  { id: "171-S", nome: "IMPUREZA", unidade: "KG", precoKg: 0.00 },
-  { id: "000061-S", nome: "HD", unidade: "KG", precoKg: 17.00 },
-  { id: "1572-S", nome: "PLACA LEVE - B", unidade: "KG", precoKg: 120.00 },
-  { id: "000006-S", nome: "PLACA LEVE - C", unidade: "KG", precoKg: 120.00 },
-  { id: "1579-S", nome: "PLACA DE TELEFONIA - B", unidade: "KG", precoKg: 185.00 },
-  { id: "1566-S", nome: "PLACA MAE C", unidade: "KG", precoKg: 50.00 },
-  { id: "383-S", nome: "EMBALAGEM", unidade: "KG", precoKg: 0.00 },
-  { id: "1574-S", nome: "PLACA INTERMEDIARIA - B", unidade: "KG", precoKg: 55.00 },
-  { id: "000036-S", nome: "PLACA DE CELULAR", unidade: "KG", precoKg: 250.00 },
-  { id: "1002-S", nome: "PLACA DE NOTEBOOK B", unidade: "KG", precoKg: 165.00 },
-  { id: "1003-S", nome: "PLACA DE NOTEBOOK C", unidade: "KG", precoKg: 75.00 },
-  { id: "1573-S", nome: "PLACA INTERMEDIARIA - A", unidade: "KG", precoKg: 63.00 },
-  { id: "000007-S", nome: "PLACA DE DRIVE", unidade: "KG", precoKg: 120.00 },
-  { id: "000009-S", nome: "PLACA DE TABLET", unidade: "KG", precoKg: 85.00 },
-  { id: "000049-S", nome: "PROCESSADOR DE FIBRA COBRE - A", unidade: "KG", precoKg: 170.00 },
-  { id: "000045-S", nome: "MEMORIA - A", unidade: "KG", precoKg: 450.00 }
+  { id: "PLACA MARROM - A", nome: "PLACA MARROM - A", unidade: "KG", precoKg: 30.00, precoVenda: null },
+  { id: "PLACA INTERMEDIARIA - C", nome: "PLACA INTERMEDIARIA - C", unidade: "KG", precoKg: 47.00, precoVenda: null },
+  { id: "PLACA PESADA - B", nome: "PLACA PESADA - B", unidade: "KG", precoKg: 27.00, precoVenda: null },
+  { id: "PLACA MAE D - (FERRO)", nome: "PLACA MAE D - (FERRO)", unidade: "KG", precoKg: 27.00, precoVenda: null },
+  { id: "PLACA INTERMEDIARIA - MODEM", nome: "PLACA INTERMEDIARIA - MODEM", unidade: "KG", precoKg: 26.00, precoVenda: null },
+  { id: "IMPUREZA", nome: "IMPUREZA", unidade: "KG", precoKg: 0.00, precoVenda: null },
+  { id: "HD", nome: "HD", unidade: "KG", precoKg: 17.00, precoVenda: null },
+  { id: "PLACA LEVE - B", nome: "PLACA LEVE - B", unidade: "KG", precoKg: 120.00, precoVenda: null },
+  { id: "PLACA LEVE - C", nome: "PLACA LEVE - C", unidade: "KG", precoKg: 120.00, precoVenda: null },
+  { id: "PLACA DE TELEFONIA - B", nome: "PLACA DE TELEFONIA - B", unidade: "KG", precoKg: 185.00, precoVenda: null },
+  { id: "PLACA MAE C", nome: "PLACA MAE C", unidade: "KG", precoKg: 50.00, precoVenda: null },
+  { id: "EMBALAGEM", nome: "EMBALAGEM", unidade: "KG", precoKg: 0.00, precoVenda: null },
+  { id: "PLACA INTERMEDIARIA - B", nome: "PLACA INTERMEDIARIA - B", unidade: "KG", precoKg: 55.00, precoVenda: null },
+  { id: "PLACA DE CELULAR", nome: "PLACA DE CELULAR", unidade: "KG", precoKg: 250.00, precoVenda: null },
+  { id: "PLACA DE NOTEBOOK B", nome: "PLACA DE NOTEBOOK B", unidade: "KG", precoKg: 165.00, precoVenda: null },
+  { id: "PLACA DE NOTEBOOK C", nome: "PLACA DE NOTEBOOK C", unidade: "KG", precoKg: 75.00, precoVenda: null },
+  { id: "PLACA INTERMEDIARIA - A", nome: "PLACA INTERMEDIARIA - A", unidade: "KG", precoKg: 63.00, precoVenda: null },
+  { id: "PLACA DE DRIVE", nome: "PLACA DE DRIVE", unidade: "KG", precoKg: 120.00, precoVenda: null },
+  { id: "PLACA DE TABLET", nome: "PLACA DE TABLET", unidade: "KG", precoKg: 85.00, precoVenda: null },
+  { id: "PROCESSADOR DE FIBRA COBRE - A", nome: "PROCESSADOR DE FIBRA COBRE - A", unidade: "KG", precoKg: 170.00, precoVenda: null },
+  { id: "MEMORIA - A", nome: "MEMORIA - A", unidade: "KG", precoKg: 450.00, precoVenda: null }
 ];
 
 let itensPesagem = [];
 let descontos = [];
 let fornecedorSelecionado = null;
+
+// Variáveis de Controle
+let modoVendaGrandeAtivo = false;
+let precoOriginalMaterial = '';
+let ultimoItemAdicionadoIndex = null; // Controle da animação na tabela
 
 // Elementos Fornecedor
 const wrapperFornecedor = document.getElementById('wrapperFornecedor');
@@ -66,6 +71,7 @@ const precoKgInput = document.getElementById('precoKg');
 const pesoBrutoInput = document.getElementById('pesoBruto');
 const subtotalPrevisto = document.getElementById('subtotalPrevisto');
 const formAdicionarItem = document.getElementById('formAdicionarItem');
+const btnVendaGrande = document.getElementById('btnVendaGrande');
 
 // Elementos Resumo
 const tabelaItensCorpo = document.querySelector('#tabelaItens tbody');
@@ -142,56 +148,12 @@ function renderizarOpcoesFornecedores(termo = '') {
   });
 }
 
-// ------------------------------------------------------------------
-// LIMPAR DEMONSTRATIVO COMPLETO
-// ------------------------------------------------------------------
-
-const btnLimparTudo = document.getElementById('btnLimparTudo');
-
-btnLimparTudo.addEventListener('click', () => {
-  if (itensPesagem.length === 0 && descontos.length === 0 && !fornecedorSelecionado) {
-    alert('O demonstrativo já está vazio.');
-    return;
-  }
-
-  const confirmou = confirm('Tem certeza que deseja limpar todos os itens, descontos e dados do demonstrativo atual?');
-  
-  if (confirmou) {
-    // 1. Limpa arrays de estado
-    itensPesagem = [];
-    descontos = [];
-    fornecedorSelecionado = null;
-
-    // 2. Reseta campos do Fornecedor
-    selectFornecedor.value = '';
-    const spanFornecedor = wrapperFornecedor.querySelector('.custom-select-trigger span');
-    spanFornecedor.textContent = 'Selecione pelo Código / Nome...';
-    spanFornecedor.classList.add('placeholder');
-    fornecedorDoc.value = '';
-    fornecedorFone.value = '';
-    fornecedorEndereco.value = '';
-
-    // 3. Reseta campos do Material
-    selectMaterial.value = '';
-    const spanMaterial = wrapperMaterial.querySelector('.custom-select-trigger span');
-    spanMaterial.textContent = 'Selecione o material...';
-    spanMaterial.classList.add('placeholder');
-    precoKgInput.value = '';
-    pesoBrutoInput.value = '';
-    subtotalPrevisto.value = 'R$ 0,00';
-
-    // 4. Renderiza a tabela limpa e zera os KPIs
-    renderizarTabela();
-  }
-});
-
 function renderizarOpcoesMateriais(termo = '') {
   const materiais = obterMateriais();
   optionsMaterial.innerHTML = '';
 
   const termoNormalizado = termo.toLowerCase().trim();
   const filtrados = materiais.filter(m => 
-    m.id.toLowerCase().includes(termoNormalizado) ||
     m.nome.toLowerCase().includes(termoNormalizado)
   );
 
@@ -204,17 +166,109 @@ function renderizarOpcoesMateriais(termo = '') {
     const opt = document.createElement('div');
     opt.className = 'custom-option';
     opt.dataset.value = m.id;
-    opt.textContent = `${m.id} - ${m.nome} (R$ ${m.precoKg.toFixed(2)}/${m.unidade || 'KG'})`;
+    // Exibe apenas Descrição e Valor
+    opt.textContent = `${m.nome} (R$ ${Number(m.precoKg).toFixed(2)}/${m.unidade || 'KG'})`;
 
     opt.addEventListener('click', (e) => {
       e.stopPropagation();
       selectMaterial.value = m.id;
       const spanTrigger = wrapperMaterial.querySelector('.custom-select-trigger span');
-      spanTrigger.textContent = `${m.id} - ${m.nome}`;
+      spanTrigger.textContent = m.nome;
       spanTrigger.classList.remove('placeholder');
       wrapperMaterial.classList.remove('open');
 
-      precoKgInput.value = m.precoKg.toFixed(2);
+      const precoNumerico = Number(m.precoKg) || 0;
+      precoOriginalMaterial = `R$ ${precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      precoKgInput.value = precoOriginalMaterial;
+
+      desativarModoVendaGrande(false);
+      calcularSubtotalPrevia();
+    });
+
+    optionsMaterial.appendChild(opt);
+  });
+}
+// Controle da Operação Atual ('compra' ou 'venda')
+let operacaoAtual = 'compra'; 
+
+const btnToggleOperacao = document.getElementById('btnToggleOperacao');
+
+// Alternância de Operação
+if (btnToggleOperacao) {
+  btnToggleOperacao.addEventListener('click', () => {
+    operacaoAtual = operacaoAtual === 'compra' ? 'venda' : 'compra';
+
+    if (operacaoAtual === 'compra') {
+      btnToggleOperacao.className = 'btn-operacao-toggle compra';
+      btnToggleOperacao.innerHTML = '<span class="badge-tag"><i class="fa-solid fa-cart-shopping"></i> COMPRA</span>';
+    } else {
+      btnToggleOperacao.className = 'btn-operacao-toggle venda';
+      btnToggleOperacao.innerHTML = '<span class="badge-tag"><i class="fa-solid fa-arrow-up-right-dots"></i> VENDA</span>';
+    }
+
+    // Se já houver um material selecionado, atualiza o preço na hora
+    if (selectMaterial && selectMaterial.value) {
+      const materiais = obterMateriais();
+      const mat = materiais.find(m => m.id === selectMaterial.value);
+      if (mat) {
+        const precoNumerico = operacaoAtual === 'compra' 
+          ? (Number(mat.precoKg) || 0)
+          : (Number(mat.precoVenda) || 0);
+
+        precoOriginalMaterial = `R$ ${precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        precoKgInput.value = precoOriginalMaterial;
+        desativarModoVendaGrande(false);
+        calcularSubtotalPrevia();
+      }
+    }
+
+    // Atualiza a lista visual do dropdown com os valores da nova operação
+    renderizarOpcoesMateriais(inputBuscaMaterial ? inputBuscaMaterial.value : '');
+  });
+}
+
+// Atualização da renderização do dropdown de materiais
+function renderizarOpcoesMateriais(termo = '') {
+  const materiais = obterMateriais();
+  optionsMaterial.innerHTML = '';
+
+  const termoNormalizado = termo.toLowerCase().trim();
+  const filtrados = materiais.filter(m => 
+    m.nome.toLowerCase().includes(termoNormalizado)
+  );
+
+  if (filtrados.length === 0) {
+    optionsMaterial.innerHTML = `<div class="custom-option-empty">Nenhum material encontrado.</div>`;
+    return;
+  }
+
+  filtrados.forEach(m => {
+    // Escolhe o valor base de acordo com a operação ativa
+    const precoBase = operacaoAtual === 'compra'
+      ? (Number(m.precoKg) || 0)
+      : (Number(m.precoVenda) || 0);
+
+    const opt = document.createElement('div');
+    opt.className = 'custom-option';
+    opt.dataset.value = m.id;
+    opt.textContent = `${m.nome} (R$ ${precoBase.toFixed(2)}/${m.unidade || 'KG'})`;
+
+    opt.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectMaterial.value = m.id;
+      const spanTrigger = wrapperMaterial.querySelector('.custom-select-trigger span');
+      spanTrigger.textContent = m.nome;
+      spanTrigger.classList.remove('placeholder');
+      wrapperMaterial.classList.remove('open');
+
+      const precoNumerico = operacaoAtual === 'compra'
+        ? (Number(m.precoKg) || 0)
+        : (Number(m.precoVenda) || 0);
+
+      precoOriginalMaterial = `R$ ${precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      precoKgInput.value = precoOriginalMaterial;
+
+      desativarModoVendaGrande(false);
       calcularSubtotalPrevia();
     });
 
@@ -222,67 +276,105 @@ function renderizarOpcoesMateriais(termo = '') {
   });
 }
 
-// Dropdown Eventos
-wrapperFornecedor.querySelector('.custom-select-trigger').addEventListener('click', (e) => {
-  e.stopPropagation();
-  wrapperMaterial.classList.remove('open');
-  const estaAberto = wrapperFornecedor.classList.toggle('open');
-  if (estaAberto) {
-    inputBuscaFornecedor.value = '';
-    renderizarOpcoesFornecedores();
-    setTimeout(() => inputBuscaFornecedor.focus(), 50);
-  }
-});
+function parseMoedaParaNumero(valorTexto) {
+  if (!valorTexto) return 0;
+  const apenasDigitos = valorTexto.toString().replace(/\D/g, '');
+  return apenasDigitos ? parseFloat(apenasDigitos) / 100 : 0;
+}
 
-wrapperMaterial.querySelector('.custom-select-trigger').addEventListener('click', (e) => {
-  e.stopPropagation();
-  wrapperFornecedor.classList.remove('open');
-  const estaAberto = wrapperMaterial.classList.toggle('open');
-  if (estaAberto) {
-    inputBuscaMaterial.value = '';
-    renderizarOpcoesMateriais();
-    setTimeout(() => inputBuscaMaterial.focus(), 50);
-  }
-});
-
-inputBuscaFornecedor.addEventListener('click', (e) => e.stopPropagation());
-inputBuscaMaterial.addEventListener('click', (e) => e.stopPropagation());
-
-inputBuscaFornecedor.addEventListener('input', (e) => renderizarOpcoesFornecedores(e.target.value));
-inputBuscaMaterial.addEventListener('input', (e) => renderizarOpcoesMateriais(e.target.value));
-
-window.addEventListener('click', () => {
-  wrapperFornecedor.classList.remove('open');
-  wrapperMaterial.classList.remove('open');
-});
-
-// Máscaras e Cálculos
 function parsePesoFormatado(valorTexto) {
   if (!valorTexto) return 0;
-  const apenasDigitos = valorTexto.replace(/\D/g, '');
-  return parseFloat(apenasDigitos) / 1000 || 0;
+  const apenasDigitos = valorTexto.toString().replace(/\D/g, '');
+  return apenasDigitos ? parseFloat(apenasDigitos) / 1000 : 0;
+}
+
+function calcularSubtotalPrevia() {
+  const preco = parseMoedaParaNumero(precoKgInput ? precoKgInput.value : '');
+  const peso = parsePesoFormatado(pesoBrutoInput ? pesoBrutoInput.value : '');
+  const subtotal = preco * peso;
+  const textoFormatado = `R$ ${subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  if (subtotalPrevisto) {
+    if ('value' in subtotalPrevisto) {
+      subtotalPrevisto.value = textoFormatado;
+    }
+    subtotalPrevisto.textContent = textoFormatado;
+  }
 }
 
 pesoBrutoInput.addEventListener('input', (e) => {
   let v = e.target.value.replace(/\D/g, '');
   if (!v) {
     e.target.value = '';
-    calcularSubtotalPrevia();
-    return;
+  } else {
+    const valorNumerico = parseFloat(v) / 1000;
+    e.target.value = valorNumerico.toLocaleString('pt-BR', {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3
+    });
   }
-  const valorNumerico = parseFloat(v) / 1000;
-  e.target.value = valorNumerico.toLocaleString('pt-BR', {
-    minimumFractionDigits: 3,
-    maximumFractionDigits: 3
-  });
   calcularSubtotalPrevia();
 });
 
-function calcularSubtotalPrevia() {
-  const preco = parseFloat(precoKgInput.value) || 0;
-  const peso = parsePesoFormatado(pesoBrutoInput.value);
-  const subtotal = preco * peso;
-  subtotalPrevisto.value = `R$ ${subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+precoKgInput.addEventListener('input', (e) => {
+  if (modoVendaGrandeAtivo) {
+    let v = e.target.value.replace(/\D/g, '');
+    if (!v || v === '0') {
+      e.target.value = 'R$ 0,00';
+    } else {
+      const valorNumerico = parseFloat(v) / 100;
+      e.target.value = `R$ ${valorNumerico.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
+    }
+  }
+  calcularSubtotalPrevia();
+});
+
+function ativarModoVendaGrande() {
+  modoVendaGrandeAtivo = true;
+  precoKgInput.removeAttribute('readonly');
+  precoKgInput.classList.add('input-preco-editavel');
+  
+  if (btnVendaGrande) {
+    btnVendaGrande.classList.add('ativo');
+    btnVendaGrande.innerHTML = '<i class="fa-solid fa-unlock"></i> Venda Grande (Ativo)';
+  }
+  
+  precoKgInput.focus();
+  precoKgInput.select();
+}
+
+function desativarModoVendaGrande(restaurarPrecoOriginal = true) {
+  modoVendaGrandeAtivo = false;
+  precoKgInput.setAttribute('readonly', 'true');
+  precoKgInput.classList.remove('input-preco-editavel');
+  
+  if (btnVendaGrande) {
+    btnVendaGrande.classList.remove('ativo');
+    btnVendaGrande.innerHTML = '<i class="fa-solid fa-lock"></i> Venda Grande';
+  }
+  
+  if (restaurarPrecoOriginal && precoOriginalMaterial) {
+    precoKgInput.value = precoOriginalMaterial;
+    calcularSubtotalPrevia();
+  }
+}
+
+if (btnVendaGrande) {
+  btnVendaGrande.addEventListener('click', () => {
+    if (!selectMaterial.value) {
+      alert('Selecione um material primeiro para liberar a edição do preço.');
+      return;
+    }
+
+    if (modoVendaGrandeAtivo) {
+      desativarModoVendaGrande(true);
+    } else {
+      ativarModoVendaGrande();
+    }
+  });
 }
 
 formAdicionarItem.addEventListener('submit', (e) => {
@@ -291,22 +383,31 @@ formAdicionarItem.addEventListener('submit', (e) => {
   const materiais = obterMateriais();
   const mat = materiais.find(item => item.id === matId);
   const peso = parsePesoFormatado(pesoBrutoInput.value);
+  const preco = parseMoedaParaNumero(precoKgInput.value) || (mat ? mat.precoKg : 0);
 
-  if (!mat || peso <= 0) {
+  if (!mat || peso <= 0 || preco <= 0) {
     alert('Selecione um material e insira um peso válido.');
     return;
   }
+
+  // Define o índice da nova linha para receber a animação CSS
+  ultimoItemAdicionadoIndex = itensPesagem.length;
 
   itensPesagem.push({
     id: mat.id,
     nome: mat.nome,
     unidade: mat.unidade || 'KG',
     peso: peso,
-    precoUnitario: mat.precoKg,
-    total: peso * mat.precoKg
+    precoUnitario: preco,
+    total: peso * preco
   });
 
   renderizarTabela();
+
+  // Limpa o índice de animação após 800ms
+  setTimeout(() => {
+    ultimoItemAdicionadoIndex = null;
+  }, 800);
 
   selectMaterial.value = '';
   const matSpan = wrapperMaterial.querySelector('.custom-select-trigger span');
@@ -314,7 +415,14 @@ formAdicionarItem.addEventListener('submit', (e) => {
   matSpan.classList.add('placeholder');
   precoKgInput.value = '';
   pesoBrutoInput.value = '';
-  subtotalPrevisto.value = 'R$ 0,00';
+  
+  if (subtotalPrevisto) {
+    if ('value' in subtotalPrevisto) subtotalPrevisto.value = 'R$ 0,00';
+    subtotalPrevisto.textContent = 'R$ 0,00';
+  }
+
+  desativarModoVendaGrande(false);
+  precoOriginalMaterial = '';
 });
 
 function renderizarTabela() {
@@ -334,8 +442,14 @@ function renderizarTabela() {
       somaBruta += item.total;
 
       const tr = document.createElement('tr');
+      
+      // Adiciona classe de animação à linha recém-criada
+      if (index === ultimoItemAdicionadoIndex) {
+        tr.classList.add('linha-animada');
+      }
+
       tr.innerHTML = `
-        <td><strong>${item.id}</strong> - ${item.nome}</td>
+        <td><strong>${item.nome}</strong></td>
         <td>${item.unidade}</td>
         <td>${item.peso.toFixed(3).replace('.', ',')}</td>
         <td>R$ ${item.precoUnitario.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
@@ -382,7 +496,83 @@ window.removerItem = function(index) {
   renderizarTabela();
 };
 
-// Modal de Desconto
+const btnLimparTudo = document.getElementById('btnLimparTudo');
+
+if (btnLimparTudo) {
+  btnLimparTudo.addEventListener('click', () => {
+    if (itensPesagem.length === 0 && descontos.length === 0 && !fornecedorSelecionado) {
+      alert('O demonstrativo já está vazio.');
+      return;
+    }
+
+    const confirmou = confirm('Tem certeza que deseja limpar todos os itens, descontos e dados do demonstrativo atual?');
+    
+    if (confirmou) {
+      itensPesagem = [];
+      descontos = [];
+      fornecedorSelecionado = null;
+
+      selectFornecedor.value = '';
+      const spanFornecedor = wrapperFornecedor.querySelector('.custom-select-trigger span');
+      spanFornecedor.textContent = 'Selecione pelo Código / Nome...';
+      spanFornecedor.classList.add('placeholder');
+      fornecedorDoc.value = '';
+      fornecedorFone.value = '';
+      fornecedorEndereco.value = '';
+
+      selectMaterial.value = '';
+      const spanMaterial = wrapperMaterial.querySelector('.custom-select-trigger span');
+      spanMaterial.textContent = 'Selecione o material...';
+      spanMaterial.classList.add('placeholder');
+      precoKgInput.value = '';
+      pesoBrutoInput.value = '';
+      
+      if (subtotalPrevisto) {
+        if ('value' in subtotalPrevisto) subtotalPrevisto.value = 'R$ 0,00';
+        subtotalPrevisto.textContent = 'R$ 0,00';
+      }
+
+      desativarModoVendaGrande(false);
+      precoOriginalMaterial = '';
+
+      renderizarTabela();
+    }
+  });
+}
+
+wrapperFornecedor.querySelector('.custom-select-trigger').addEventListener('click', (e) => {
+  e.stopPropagation();
+  wrapperMaterial.classList.remove('open');
+  const estaAberto = wrapperFornecedor.classList.toggle('open');
+  if (estaAberto) {
+    inputBuscaFornecedor.value = '';
+    renderizarOpcoesFornecedores();
+    setTimeout(() => inputBuscaFornecedor.focus(), 50);
+  }
+});
+
+wrapperMaterial.querySelector('.custom-select-trigger').addEventListener('click', (e) => {
+  e.stopPropagation();
+  wrapperFornecedor.classList.remove('open');
+  const estaAberto = wrapperMaterial.classList.toggle('open');
+  if (estaAberto) {
+    inputBuscaMaterial.value = '';
+    renderizarOpcoesMateriais();
+    setTimeout(() => inputBuscaMaterial.focus(), 50);
+  }
+});
+
+inputBuscaFornecedor.addEventListener('click', (e) => e.stopPropagation());
+inputBuscaMaterial.addEventListener('click', (e) => e.stopPropagation());
+
+inputBuscaFornecedor.addEventListener('input', (e) => renderizarOpcoesFornecedores(e.target.value));
+inputBuscaMaterial.addEventListener('input', (e) => renderizarOpcoesMateriais(e.target.value));
+
+window.addEventListener('click', () => {
+  wrapperFornecedor.classList.remove('open');
+  wrapperMaterial.classList.remove('open');
+});
+
 descValor.addEventListener('input', (e) => {
   let v = e.target.value.replace(/\D/g, '');
   if (!v) {
@@ -428,10 +618,6 @@ window.removerDesconto = function(index) {
   renderizarTabela();
 };
 
-// ------------------------------------------------------------------
-// GERAÇÃO DO DEMONSTRATIVO EM PDF (DESIGN SAAS VERDE ESMERALDA)
-// ------------------------------------------------------------------
-
 function gerarPDFDemonstrativo() {
   if (!fornecedorSelecionado || itensPesagem.length === 0) {
     alert('Selecione um fornecedor e adicione ao menos um material para gerar o PDF.');
@@ -459,19 +645,16 @@ function gerarPDFDemonstrativo() {
   const totalDescontos = descontos.reduce((acc, d) => acc + d.valor, 0);
   const valorFinal = Math.max(0, totalBruto - totalDescontos);
 
-  // Paleta de Cores Padrão do Sistema
-  const verdePrimario = [16, 185, 129];   // #10b981
-  const verdeEscuro = [6, 95, 70];        // #065f46
-  const fundoCard = [248, 250, 252];      // #f8fafc
-  const bordaCinza = [226, 232, 240];     // #e2e8f0
-  const textoPrincipal = [15, 23, 42];    // #0f172a
-  const textoSuave = [100, 116, 139];     // #64748b
+  const verdePrimario = [16, 185, 129];
+  const verdeEscuro = [6, 95, 70];
+  const fundoCard = [248, 250, 252];
+  const bordaCinza = [226, 232, 240];
+  const textoPrincipal = [15, 23, 42];
+  const textoSuave = [100, 116, 139];
 
-  // 1. Faixa Superior de Destaque
   doc.setFillColor(...verdePrimario);
   doc.rect(0, 0, pageWidth, 5, 'F');
 
-  // 2. Cabeçalho da Empresa
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(...verdeEscuro);
@@ -483,7 +666,6 @@ function gerarPDFDemonstrativo() {
   doc.text('CNPJ: 21.503.376/0016-75 | Fone: (11) 4732-4789', 14, 19);
   doc.text('Endereço: Rua Antonio Martins, 102 - Damas - Fortaleza/CE', 14, 23);
 
-  // Badge do Boleto
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
   doc.roundedRect(pageWidth - 65, 9, 51, 15, 2, 2, 'FD');
@@ -496,7 +678,6 @@ function gerarPDFDemonstrativo() {
   doc.setTextColor(...textoSuave);
   doc.text('SIMPLES DEMONSTRATIVO INTERNO', pageWidth - 61, 20);
 
-  // 3. Card de Dados do Fornecedor e da Coleta
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
   doc.roundedRect(14, 28, pageWidth - 28, 22, 2, 2, 'FD');
@@ -517,7 +698,6 @@ function gerarPDFDemonstrativo() {
   doc.text(`Endereço: ${fornecedorSelecionado.endereco || 'Não informado'}`, 18, 44);
   doc.text('Saldo Devedor: R$ 0,00', pageWidth - 75, 44);
 
-  // 4. Tabela de Materiais
   const colunas = [
     { header: 'PRODUTO', dataKey: 'produto' },
     { header: 'UN', dataKey: 'unidade' },
@@ -530,7 +710,7 @@ function gerarPDFDemonstrativo() {
   ];
 
   const linhas = itensPesagem.map(item => ({
-    produto: `${item.id} - ${item.nome}`,
+    produto: item.nome,
     unidade: item.unidade || 'KG',
     bruto: item.peso.toLocaleString('pt-BR', { minimumFractionDigits: 3 }),
     descEmb: '0,000',
@@ -573,7 +753,6 @@ function gerarPDFDemonstrativo() {
 
   const finalY = doc.lastAutoTable.finalY + 4;
 
-  // 5. Card de Resumo e Consolidação
   doc.setFillColor(...fundoCard);
   doc.setDrawColor(...bordaCinza);
   doc.roundedRect(14, finalY, pageWidth - 28, 14, 2, 2, 'FD');
@@ -598,7 +777,6 @@ function gerarPDFDemonstrativo() {
   doc.text('Frete: Empresa | Motorista: --- | Placa: ---', 18, finalY + 11);
   doc.text('Impresso por: Sistema | Balancista: Responsável', 115, finalY + 11);
 
-  // 6. Card Destacado do Valor Total
   doc.setFillColor(236, 253, 245);
   doc.setDrawColor(167, 243, 208);
   doc.roundedRect(pageWidth - 75, finalY + 17, 61, 12, 2, 2, 'FD');
@@ -612,10 +790,6 @@ function gerarPDFDemonstrativo() {
 
   doc.save(`Demonstrativo_${fornecedorSelecionado.codigo}_${Date.now()}.pdf`);
 }
-
-// ------------------------------------------------------------------
-// AÇÕES FINAIS (PDF, WHATSAPP, EMAIL)
-// ------------------------------------------------------------------
 
 document.getElementById('btnPDF').addEventListener('click', gerarPDFDemonstrativo);
 
