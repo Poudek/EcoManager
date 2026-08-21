@@ -42,116 +42,216 @@
   </nav>
 
   <main class="main-content">
-    <header class="topbar">
-      <div>
-        <h1>Relatório de Operações & Lançamentos</h1>
-        <p class="subtitle">Acompanhe as pesagens do dia, detalhes de compras e vendas por comprovante</p>
-      </div>
-      <div class="user-profile">
-        <span class="badge">Controle Diário</span>
-      </div>
-    </header>
+  <!-- Na <header class="topbar"> do relatorios.html -->
+<header class="topbar">
+  <div>
+    <h1>Relatório de Operações & Lançamentos</h1>
+    <p class="subtitle">Acompanhe as pesagens consolidadas e detalhadas por período</p>
+  </div>
+  
+  <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+    <!-- Filtro de Período -->
+    <div class="periodo-filtro-container">
+      <button type="button" class="btn-periodo active" data-periodo="diario" onclick="trocarPeriodo('diario')">
+        <i class="fa-regular fa-calendar"></i> Hoje
+      </button>
+      <button type="button" class="btn-periodo" data-periodo="semanal" onclick="trocarPeriodo('semanal')">
+        <i class="fa-solid fa-calendar-week"></i> 7 Dias
+      </button>
+      <button type="button" class="btn-periodo" data-periodo="mensal" onclick="trocarPeriodo('mensal')">
+        <i class="fa-regular fa-calendar-days"></i> Mês Atual
+      </button>
+    </div>
 
-    <!-- Indicadores do Dia -->
-    <div class="kpi-grid">
-      <div class="card kpi-card">
-        <div class="kpi-icon icon-emerald">
-          <i class="fa-solid fa-cart-shopping"></i>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">Total Compras (Dia)</span>
-          <h3 id="kpiTotalCompras">R$ 0,00</h3>
-        </div>
-      </div>
+    <!-- Botão de Exportar PDF -->
+    <button type="button" id="btnExportarPDFRelatorio" class="btn btn-action btn-pdf">
+      <i class="fa-solid fa-file-pdf"></i> Exportar Resumo (PDF)
+    </button>
+  </div>
+</header>
 
-      <div class="card kpi-card">
-        <div class="kpi-icon icon-blue">
-          <i class="fa-solid fa-arrow-up-right-dots"></i>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">Total Vendas (Dia)</span>
-          <h3 id="kpiTotalVendas">R$ 0,00</h3>
-        </div>
+  <!-- Indicadores Principais -->
+  <div class="kpi-grid">
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-emerald">
+        <i class="fa-solid fa-cart-shopping"></i>
       </div>
-
-      <div class="card kpi-card">
-        <div class="kpi-icon icon-purple">
-          <i class="fa-solid fa-weight-hanging"></i>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">Peso Total Movimentado</span>
-          <h3 id="kpiPesoTotal">0,000 kg</h3>
-        </div>
-      </div>
-
-      <div class="card kpi-card">
-        <div class="kpi-icon icon-amber">
-          <i class="fa-solid fa-receipt"></i>
-        </div>
-        <div class="kpi-data">
-          <span class="kpi-label">Lançamentos Hoje</span>
-          <h3 id="kpiQtdLancamentos">0</h3>
-        </div>
+      <div class="kpi-data">
+        <span class="kpi-label">Total Compras</span>
+        <h3 id="kpiTotalCompras">R$ 0,00</h3>
       </div>
     </div>
 
-    <!-- Lista de Lançamentos -->
-    <section class="card">
-      <div class="card-header space-between">
-        <div class="title-with-icon">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <h2>Lançamentos do Dia</h2>
-        </div>
-        <div class="search-box">
-          <input type="text" id="buscaLancamento" placeholder="Buscar por ID, Fornecedor ou Data...">
-        </div>
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-blue">
+        <i class="fa-solid fa-arrow-up-right-dots"></i>
       </div>
-
-      <div id="listaLancamentosContainer" class="lancamentos-accordion-list">
-        <!-- Gerado dinamicamente via JS -->
+      <div class="kpi-data">
+        <span class="kpi-label">Total Vendas</span>
+        <h3 id="kpiTotalVendas">R$ 0,00</h3>
       </div>
-    </section>
-  </main>
+    </div>
 
-  <!-- Modal de Edição de Item do Lançamento -->
-  <div id="modalEditarItem" class="modal-overlay hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-pen-to-square"></i> Editar Item do Lançamento</h3>
-        <button type="button" class="btn-close-modal" id="btnFecharModalEdicao">&times;</button>
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-emerald">
+        <i class="fa-solid fa-scale-unbalanced"></i>
       </div>
-      <form id="formEdicaoItemLancamento">
-        <input type="hidden" id="editLancamentoId">
-        <input type="hidden" id="editItemIndex">
+      <div class="kpi-data">
+        <span class="kpi-label">Peso Comprado</span>
+        <h3 id="kpiPesoComprado">0,000 kg</h3>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label>Material</label>
-          <input type="text" id="editMaterialNome" class="form-control" readonly disabled>
-        </div>
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-blue">
+        <i class="fa-solid fa-scale-balanced"></i>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-label">Peso Vendido</span>
+        <h3 id="kpiPesoVendido">0,000 kg</h3>
+      </div>
+    </div>
 
-        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
-          <div class="form-group">
-            <label for="editPeso">Peso (KG)</label>
-            <input type="text" id="editPeso" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="editPreco">Preço Aplicado (R$)</label>
-            <input type="text" id="editPreco" class="form-control" required>
-          </div>
-        </div>
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-purple">
+        <i class="fa-solid fa-weight-hanging"></i>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-label">Peso Movimentado</span>
+        <h3 id="kpiPesoTotal">0,000 kg</h3>
+      </div>
+    </div>
 
-        <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-          <button type="button" id="btnCancelarEdicaoItem" class="btn btn-muted">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar Alteração</button>
-        </div>
-      </form>
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-amber">
+        <i class="fa-solid fa-receipt"></i>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-label">Total Lançamentos</span>
+        <h3 id="kpiQtdLancamentos">0</h3>
+      </div>
     </div>
   </div>
 
-  <script>
+  <!-- Resumo Consolidado por Material (Soma de KG e Total) -->
+  <section class="consolidado-grid">
+    <!-- Bloco de Compras -->
+    <div class="card card-consolidado compra-card">
+      <div class="card-header space-between">
+        <div class="title-with-icon">
+          <i class="fa-solid fa-cart-shopping text-emerald"></i>
+          <h2>Consolidado de Compras</h2>
+        </div>
+        <span class="badge-tag-compra" id="subtotalComprasBadge">R$ 0,00</span>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table" id="tabelaConsolidadoCompras">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Peso Acumulado</th>
+              <th>Preço Médio</th>
+              <th>Total Gasto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bloco de Vendas -->
+    <div class="card card-consolidado venda-card">
+      <div class="card-header space-between">
+        <div class="title-with-icon">
+          <i class="fa-solid fa-arrow-up-right-dots text-blue"></i>
+          <h2>Consolidado de Vendas</h2>
+        </div>
+        <span class="badge-tag-venda" id="subtotalVendasBadge">R$ 0,00</span>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table" id="tabelaConsolidadoVendas">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Peso Acumulado</th>
+              <th>Preço Médio</th>
+              <th>Total Faturado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Histórico Detalhado de Lançamentos -->
+  <section class="card" style="margin-top: 24px;">
+    <div class="card-header space-between">
+      <div class="title-with-icon">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <h2 id="tituloHistorico">Lançamentos Detalhados (Hoje)</h2>
+      </div>
+      <div class="search-box">
+        <input type="text" id="buscaLancamento" placeholder="Buscar por ID, Fornecedor ou Tipo...">
+      </div>
+    </div>
+
+    <div id="listaLancamentosContainer" class="lancamentos-accordion-list">
+      <!-- Via JS -->
+    </div>
+  </section>
+</main>
+
+  <!-- Modal de Edição de Item do Lançamento -->
+  <!-- Modal de Edição de Item do Lançamento -->
+<div id="modalEditarItem" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <i class="fa-solid fa-pen-to-square modal-icon-emerald"></i>
+        <h3>Editar Item do Lançamento</h3>
+      </div>
+      <button type="button" class="btn-close-modal" id="btnFecharModalEdicao">&times;</button>
+    </div>
+
+    <form id="formEdicaoItemLancamento">
+      <input type="hidden" id="editLancamentoId">
+      <input type="hidden" id="editItemIndex">
+
+      <div class="form-group">
+        <label for="editMaterialNome">Material</label>
+        <input type="text" id="editMaterialNome" class="form-control" readonly disabled>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label for="editPeso">Peso (KG)</label>
+          <input type="text" id="editPeso" class="form-control" placeholder="0,000" required>
+        </div>
+        <div class="form-group">
+          <label for="editPreco">Preço Aplicado (R$)</label>
+          <input type="text" id="editPreco" class="form-control" placeholder="R$ 0,00" required>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btnCancelarEdicaoItem" class="btn-modal-cancel">Cancelar</button>
+        <button type="submit" class="btn-modal-save">Salvar Alteração</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    <script>
     function showSidebar() { document.getElementById('mobileSidebar').style.display = 'flex'; }
     function hideSidebar() { document.getElementById('mobileSidebar').style.display = 'none'; }
-  </script>
-  <script src="js/relatorios.js"></script>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/relatorios.js"></script>
 </body>
 </html>

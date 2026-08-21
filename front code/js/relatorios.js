@@ -1,13 +1,24 @@
 const STORAGE_KEY_LANCAMENTOS = 'ecoreciclagem_historico_lancamentos';
 
+let periodoAtivo = 'diario'; // 'diario' | 'semanal' | 'mensal'
+
+// Elementos
 const kpiTotalCompras = document.getElementById('kpiTotalCompras');
 const kpiTotalVendas = document.getElementById('kpiTotalVendas');
+const kpiPesoComprado = document.getElementById('kpiPesoComprado');
+const kpiPesoVendido = document.getElementById('kpiPesoVendido');
 const kpiPesoTotal = document.getElementById('kpiPesoTotal');
 const kpiQtdLancamentos = document.getElementById('kpiQtdLancamentos');
+const subtotalComprasBadge = document.getElementById('subtotalComprasBadge');
+const subtotalVendasBadge = document.getElementById('subtotalVendasBadge');
+
+const tabelaConsolidadoComprasBody = document.querySelector('#tabelaConsolidadoCompras tbody');
+const tabelaConsolidadoVendasBody = document.querySelector('#tabelaConsolidadoVendas tbody');
 const containerLista = document.getElementById('listaLancamentosContainer');
 const buscaInput = document.getElementById('buscaLancamento');
+const tituloHistorico = document.getElementById('tituloHistorico');
 
-// Modal de Edição
+// Modal
 const modalEditar = document.getElementById('modalEditarItem');
 const btnFecharModal = document.getElementById('btnFecharModalEdicao');
 const btnCancelarModal = document.getElementById('btnCancelarEdicaoItem');
@@ -36,33 +47,131 @@ function formatarMoeda(v) {
   return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// Filtro de Data
+function pertenceAoPeriodo(isoString) {
+  const data = new Date(isoString);
+  const agora = new Date();
+
+  if (periodoAtivo === 'diario') {
+    return data.toDateString() === agora.toDateString();
+  }
+
+  if (periodoAtivo === 'semanal') {
+    const seteDiasAtras = new Date();
+    seteDiasAtras.setDate(agora.getDate() - 7);
+    return data >= seteDiasAtras && data <= agora;
+  }
+
+  if (periodoAtivo === 'mensal') {
+    return data.getMonth() === agora.getMonth() && data.getFullYear() === agora.getFullYear();
+  }
+
+  return true;
+}
+
+window.trocarPeriodo = function(periodo) {
+  periodoAtivo = periodo;
+  document.querySelectorAll('.btn-periodo').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.periodo === periodo);
+  });
+
+  const titulos = {
+    diario: 'Lançamentos Detalhados (Hoje)',
+    semanal: 'Lançamentos Detalhados (Últimos 7 Dias)',
+    mensal: 'Lançamentos Detalhados (Mês Atual)'
+  };
+  if (tituloHistorico) tituloHistorico.textContent = titulos[periodo] || 'Lançamentos Detalhados';
+
+  carregarDashboard(buscaInput ? buscaInput.value : '');
+};
+
+function processarConsolidado(lancamentos) {
+  const comprasMap = {};
+  const vendasMap = {};
+
+  lancamentos.forEach(l => {
+    const mapAlvo = l.operacao === 'compra' ? comprasMap : vendasMap;
+
+    l.itens.forEach(item => {
+      if (!mapAlvo[item.nome]) {
+        mapAlvo[item.nome] = { peso: 0, total: 0, unidade: item.unidade || 'KG' };
+      }
+      mapAlvo[item.nome].peso += item.peso;
+      mapAlvo[item.nome].total += item.total;
+    });
+  });
+
+  return { comprasMap, vendasMap };
+}
+
+function renderizarTabelaConsolidada(tbody, mapa, totalBadge) {
+  tbody.innerHTML = '';
+  const chaves = Object.keys(mapa);
+  let somaTotal = 0;
+
+  if (chaves.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Nenhum item movimentado neste período.</td></tr>`;
+    if (totalBadge) totalBadge.textContent = 'R$ 0,00';
+    return;
+  }
+
+  chaves.sort().forEach(nome => {
+    const dado = mapa[nome];
+    somaTotal += dado.total;
+    const precoMedio = dado.peso > 0 ? (dado.total / dado.peso) : 0;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${nome}</strong></td>
+      <td>${dado.peso.toFixed(3).replace('.', ',')} ${dado.unidade}</td>
+      <td>R$ ${formatarMoeda(precoMedio)}</td>
+      <td><strong>R$ ${formatarMoeda(dado.total)}</strong></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if (totalBadge) totalBadge.textContent = `R$ ${formatarMoeda(somaTotal)}`;
+}
+
 function carregarDashboard(filtro = '') {
   const lista = obterLancamentos();
   const termo = filtro.toLowerCase().trim();
 
-  const hoje = new Date().toDateString();
-  let comprasDia = 0;
-  let vendasDia = 0;
-  let pesoDia = 0;
-  let qtdDia = 0;
+  // Filtra por período
+  const lancamentosPeriodo = lista.filter(l => pertenceAoPeriodo(l.dataHora));
 
-  lista.forEach(l => {
-    const dataL = new Date(l.dataHora).toDateString();
-    if (dataL === hoje) {
-      qtdDia++;
-      pesoDia += l.totalPeso;
-      if (l.operacao === 'compra') comprasDia += l.valorFinal;
-      else vendasDia += l.valorFinal;
+  let comprasTotal = 0;
+  let vendasTotal = 0;
+  let pesoComprado = 0;
+  let pesoVendido = 0;
+
+  lancamentosPeriodo.forEach(l => {
+    if (l.operacao === 'compra') {
+      comprasTotal += l.valorFinal;
+      pesoComprado += l.totalPeso;
+    } else {
+      vendasTotal += l.valorFinal;
+      pesoVendido += l.totalPeso;
     }
   });
 
-  kpiTotalCompras.textContent = `R$ ${formatarMoeda(comprasDia)}`;
-  kpiTotalVendas.textContent = `R$ ${formatarMoeda(vendasDia)}`;
-  kpiPesoTotal.textContent = `${pesoDia.toFixed(3).replace('.', ',')} kg`;
-  kpiQtdLancamentos.textContent = qtdDia;
+  const pesoTotal = pesoComprado + pesoVendido;
 
-  // Filtragem da lista
-  const filtrados = lista.filter(l => 
+  // Atualização dos Indicadores
+  if (kpiTotalCompras) kpiTotalCompras.textContent = `R$ ${formatarMoeda(comprasTotal)}`;
+  if (kpiTotalVendas) kpiTotalVendas.textContent = `R$ ${formatarMoeda(vendasTotal)}`;
+  if (kpiPesoComprado) kpiPesoComprado.textContent = `${pesoComprado.toFixed(3).replace('.', ',')} kg`;
+  if (kpiPesoVendido) kpiPesoVendido.textContent = `${pesoVendido.toFixed(3).replace('.', ',')} kg`;
+  if (kpiPesoTotal) kpiPesoTotal.textContent = `${pesoTotal.toFixed(3).replace('.', ',')} kg`;
+  if (kpiQtdLancamentos) kpiQtdLancamentos.textContent = lancamentosPeriodo.length;
+
+  // Renderiza Tabelas Consolidadas
+  const { comprasMap, vendasMap } = processarConsolidado(lancamentosPeriodo);
+  renderizarTabelaConsolidada(tabelaConsolidadoComprasBody, comprasMap, subtotalComprasBadge);
+  renderizarTabelaConsolidada(tabelaConsolidadoVendasBody, vendasMap, subtotalVendasBadge);
+
+  // Filtragem e Renderização do Histórico Detalhado
+  const filtrados = lancamentosPeriodo.filter(l => 
     l.id.toLowerCase().includes(termo) ||
     l.fornecedor.nome.toLowerCase().includes(termo) ||
     l.operacao.toLowerCase().includes(termo)
@@ -71,7 +180,7 @@ function carregarDashboard(filtro = '') {
   containerLista.innerHTML = '';
 
   if (filtrados.length === 0) {
-    containerLista.innerHTML = `<div class="card text-center text-muted" style="padding: 30px;">Nenhum lançamento registrado no sistema.</div>`;
+    containerLista.innerHTML = `<div class="card text-center text-muted" style="padding: 30px;">Nenhum lançamento encontrado para os filtros selecionados.</div>`;
     return;
   }
 
@@ -181,12 +290,10 @@ formEdicao.addEventListener('submit', (e) => {
   const lanc = lista.find(l => l.id === lancId);
   if (!lanc) return;
 
-  // Atualiza item específico
   lanc.itens[itemIdx].peso = pesoNum;
   lanc.itens[itemIdx].precoUnitario = precoNum;
   lanc.itens[itemIdx].total = pesoNum * precoNum;
 
-  // Recalcula totais do comprovante
   lanc.totalPeso = lanc.itens.reduce((acc, i) => acc + i.peso, 0);
   lanc.totalBruto = lanc.itens.reduce((acc, i) => acc + i.total, 0);
   lanc.valorFinal = Math.max(0, lanc.totalBruto - lanc.totalDescontos);
@@ -196,7 +303,202 @@ formEdicao.addEventListener('submit', (e) => {
   carregarDashboard(buscaInput.value);
 });
 
-// Máscaras dos inputs no modal de edição
+function gerarPDFRelatorioPeriodo() {
+  const jsPdfLib = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+  if (!jsPdfLib) {
+    alert('Biblioteca jsPDF não carregada.');
+    return;
+  }
+
+  const lista = obterLancamentos();
+  const lancamentosPeriodo = lista.filter(l => pertenceAoPeriodo(l.dataHora));
+
+  if (lancamentosPeriodo.length === 0) {
+    alert('Não há lançamentos registrados neste período para gerar o relatório em PDF.');
+    return;
+  }
+
+  const doc = new jsPdfLib({
+    orientation: 'p',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = doc.internal.pageSize.width;
+  const dataAtual = new Date();
+  const dataFormatada = dataAtual.toLocaleDateString('pt-BR') + ' ' + dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  const titulosPeriodo = {
+    diario: 'RELATÓRIO CONSOLIDADO DIÁRIO (HOJE)',
+    semanal: 'RELATÓRIO CONSOLIDADO SEMANAL (ÚLTIMOS 7 DIAS)',
+    mensal: 'RELATÓRIO CONSOLIDADO MENSAL (MÊS ATUAL)'
+  };
+  const tituloRelatorio = titulosPeriodo[periodoAtivo] || 'RELATÓRIO CONSOLIDADO';
+
+  // Cálculos Gerais
+  let comprasTotal = 0;
+  let vendasTotal = 0;
+  let pesoComprado = 0;
+  let pesoVendido = 0;
+
+  lancamentosPeriodo.forEach(l => {
+    if (l.operacao === 'compra') {
+      comprasTotal += l.valorFinal;
+      pesoComprado += l.totalPeso;
+    } else {
+      vendasTotal += l.valorFinal;
+      pesoVendido += l.totalPeso;
+    }
+  });
+
+  const { comprasMap, vendasMap } = processarConsolidado(lancamentosPeriodo);
+
+  const verdePrimario = [16, 185, 129];
+  const verdeEscuro = [6, 95, 70];
+  const azulEscuro = [30, 64, 175];
+  const fundoCard = [248, 250, 252];
+  const bordaCinza = [226, 232, 240];
+  const textoPrincipal = [15, 23, 42];
+  const textoSuave = [100, 116, 139];
+
+  // Barra de Destaque Superior
+  doc.setFillColor(...verdePrimario);
+  doc.rect(0, 0, pageWidth, 5, 'F');
+
+  // Cabeçalho Institucional
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(...verdeEscuro);
+  doc.text('BRASIL SUSTENTABILIDADE & GESTÃO DE RESÍDUOS', 14, 14);
+
+  doc.setFontSize(8);
+  doc.setTextColor(...textoSuave);
+  doc.setFont('helvetica', 'normal');
+  doc.text('EcoManager - Painel de Controle Analítico de Movimentações', 14, 19);
+  doc.text(`Emissão: ${dataFormatada}`, 14, 23);
+
+  // Card com Título do Período
+  doc.setFillColor(...fundoCard);
+  doc.setDrawColor(...bordaCinza);
+  doc.roundedRect(pageWidth - 85, 9, 71, 15, 2, 2, 'FD');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...verdeEscuro);
+  doc.text(tituloRelatorio, pageWidth - 82, 15, { maxWidth: 66 });
+  doc.setFontSize(7);
+  doc.setTextColor(...textoSuave);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Lançamentos no período: ${lancamentosPeriodo.length}`, pageWidth - 82, 21);
+
+  // Card Resumo Geral (KPIs)
+  doc.setFillColor(...fundoCard);
+  doc.setDrawColor(...bordaCinza);
+  doc.roundedRect(14, 28, pageWidth - 28, 16, 2, 2, 'FD');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(...textoPrincipal);
+  doc.text(`Total Compras: R$ ${formatarMoeda(comprasTotal)}`, 18, 34);
+  doc.text(`Total Vendas: R$ ${formatarMoeda(vendasTotal)}`, 75, 34);
+  doc.text(`Resultado: R$ ${formatarMoeda(vendasTotal - comprasTotal)}`, 135, 34);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...textoSuave);
+  doc.text(`Peso Comprado: ${pesoComprado.toFixed(3).replace('.', ',')} kg`, 18, 40);
+  doc.text(`Peso Vendido: ${pesoVendido.toFixed(3).replace('.', ',')} kg`, 75, 40);
+  doc.text(`Peso Movimentado: ${(pesoComprado + pesoVendido).toFixed(3).replace('.', ',')} kg`, 135, 40);
+
+  let posY = 48;
+
+  // 1. Tabela Consolidada de Compras
+  const chavesCompras = Object.keys(comprasMap);
+  if (chavesCompras.length > 0) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...verdeEscuro);
+    doc.text('CONSOLIDADO DE COMPRAS (POR MATERIAL)', 14, posY + 4);
+
+    const linhasCompras = chavesCompras.sort().map(nome => {
+      const d = comprasMap[nome];
+      const precoMedio = d.peso > 0 ? d.total / d.peso : 0;
+      return [
+        nome,
+        `${d.peso.toLocaleString('pt-BR', { minimumFractionDigits: 3 })} ${d.unidade}`,
+        `R$ ${formatarMoeda(precoMedio)}`,
+        `R$ ${formatarMoeda(d.total)}`
+      ];
+    });
+
+    doc.autoTable({
+      head: [['Material', 'Peso Acumulado', 'Preço Médio (R$)', 'Total Gasto (R$)']],
+      body: linhasCompras,
+      startY: posY + 6,
+      theme: 'grid',
+      styles: { fontSize: 7.5, cellPadding: 2, textColor: textoPrincipal },
+      headStyles: { fillColor: verdeEscuro, textColor: [255, 255, 255], fontStyle: 'bold' },
+      columnStyles: {
+        0: { cellWidth: 80 },
+        1: { halign: 'right' },
+        2: { halign: 'right' },
+        3: { halign: 'right', fontStyle: 'bold' }
+      }
+    });
+
+    posY = doc.lastAutoTable.finalY + 8;
+  }
+
+  // 2. Tabela Consolidada de Vendas
+  const chavesVendas = Object.keys(vendasMap);
+  if (chavesVendas.length > 0) {
+    // Se a tabela for ficar muito baixa na página, cria uma nova página
+    if (posY > 230) {
+      doc.addPage();
+      posY = 15;
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...azulEscuro);
+    doc.text('CONSOLIDADO DE VENDAS (POR MATERIAL)', 14, posY + 4);
+
+    const linhasVendas = chavesVendas.sort().map(nome => {
+      const d = vendasMap[nome];
+      const precoMedio = d.peso > 0 ? d.total / d.peso : 0;
+      return [
+        nome,
+        `${d.peso.toLocaleString('pt-BR', { minimumFractionDigits: 3 })} ${d.unidade}`,
+        `R$ ${formatarMoeda(precoMedio)}`,
+        `R$ ${formatarMoeda(d.total)}`
+      ];
+    });
+
+    doc.autoTable({
+      head: [['Material', 'Peso Acumulado', 'Preço Médio (R$)', 'Total Faturado (R$)']],
+      body: linhasVendas,
+      startY: posY + 6,
+      theme: 'grid',
+      styles: { fontSize: 7.5, cellPadding: 2, textColor: textoPrincipal },
+      headStyles: { fillColor: azulEscuro, textColor: [255, 255, 255], fontStyle: 'bold' },
+      columnStyles: {
+        0: { cellWidth: 80 },
+        1: { halign: 'right' },
+        2: { halign: 'right' },
+        3: { halign: 'right', fontStyle: 'bold' }
+      }
+    });
+  }
+
+  doc.save(`Relatorio_Consolidado_${periodoAtivo.toUpperCase()}_${Date.now()}.pdf`);
+}
+
+// Ouvinte do Botão de Exportar PDF
+const btnExportarPDF = document.getElementById('btnExportarPDFRelatorio');
+if (btnExportarPDF) {
+  btnExportarPDF.addEventListener('click', gerarPDFRelatorioPeriodo);
+}
+
 editPeso.addEventListener('input', (e) => {
   let v = e.target.value.replace(/\D/g, '');
   e.target.value = v ? (parseFloat(v) / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) : '';
@@ -207,5 +509,8 @@ editPreco.addEventListener('input', (e) => {
   e.target.value = v ? `R$ ${(parseFloat(v) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '';
 });
 
-buscaInput.addEventListener('input', (e) => carregarDashboard(e.target.value));
+if (buscaInput) {
+  buscaInput.addEventListener('input', (e) => carregarDashboard(e.target.value));
+}
+
 document.addEventListener('DOMContentLoaded', () => carregarDashboard());
