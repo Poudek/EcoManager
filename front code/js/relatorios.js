@@ -425,7 +425,7 @@ async function gerarPDFRelatorioPeriodo() {
   doc.rect(0, 0, pageWidth, 5, 'F');
 
   // Carrega e renderiza a Logo no Cabeçalho
-  const logoInfo = await carregarImagemBase64('../front%20code/assets/logo.png');
+  const logoInfo = await carregarImagemBase64('assets/logo.png');
   let textStartX = 14;
 
   if (logoInfo) {
