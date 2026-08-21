@@ -1,7 +1,7 @@
 # ♻️ EcoManager - Sistema de Gestão e Pesagem de Reciclagem
 
 <p align="center">
-  <img src="../front%20code/assets/logo.png" alt="Logo DV Reciclagem" width="180" />
+  <img src="front%20code/assets/logo.png" alt="Logo DV Reciclagem" width="180" />
 </p>
 
 <p align="center">
